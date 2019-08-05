@@ -1,0 +1,737 @@
+---
+layout: post
+date: 2019-04-18
+title: State of the Art Crowd Counting
+author: Bogdan Budescu
+categories: [deep learning, computer vision]
+tags: [sota, deep learning, portofolio]
+# image: img.png
+---
+
+# State of the art in crowd stuff
+- counting
+- density maps
+- flow tracking
+
+## Datasets
+- from the web pages of [GCC](https://gjy3035.github.io/GCC-CL/) and [UCF-QNRF](https://www.crcv.ucf.edu/data/ucf-qnrf/)
+- from the [github repo for CCWld's sota](https://github.com/gjy3035/Awesome-Crowd-Counting)
+
+| Dataset                                                                                                                                                                                              | Images | Avg Resolution | Total            | Min | Avg   | Max           | Avg Density (x10^-4) |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | -------------- | ---------------- | --- | ----- | ------------- | -------------------- |
+| [UCSD](http://www.svcl.ucsd.edu/projects/peoplecnt/) ([2008 paper](http://www.svcl.ucsd.edu/publications/journal/2008/pami/pami08-dytexmix.pdf))                                                     | 2000   | 155 x 238      | 49,885           | 11  | 25    | 46            |                      |
+| [Mall](http://personal.ie.cuhk.edu.hk/~ccloy/downloads_mall_dataset.html) ([2012 paper](http://personal.ie.cuhk.edu.hk/~ccloy/files/bmvc_2012b.pdf))                                                 | 2000   | 480 x 640      | 62,325           | 13  | 31    | 53            |                      |
+| [UCF_CC_50](https://www.crcv.ucf.edu/data/ucf-cc-50/) ([2013 paper](https://www.cv-foundation.org/openaccess/content_cvpr_2013/papers/Idrees_Multi-source_Multi-scale_Counting_2013_CVPR_paper.pdf)) | 50     | 2101 × 2888    | 63,974           | 94  | 1,279 | 4,543 / 4,633 | 2.02                 |
+| [AHU-Crowd](http://cs-chan.com/downloads_crowd_dataset.html) (flow, [2014 paper](https://arxiv.org/abs/1410.3756))                                                                                   |        |                |                  |     |       |               |                      |
+| [WorldExpo10](http://www.ee.cuhk.edu.hk/~xgwang/expo.html) ([Cross-Scene](#Cross-Scene) 2015)                                                                                                         | 3,980  | 576 × 720      | 199,932 /225.216 | 1   | 50/56 | 253           | 1.36                 |
+| [Shanghai Tech Part A](https://github.com/desenzhou/ShanghaiTechDataset) ([MCNN](#MCNN) 2016)                                                                                                        | 482    | 589 × 868      | 241,677          | 33  | 501   | 3,139         | 9.33                 |
+| [Shanghai Tech Part B](https://github.com/desenzhou/ShanghaiTechDataset) ([MCNN](#MCNN) 2016)                                                                                                        | 716    | 768 × 1024     | 88,488           | 9   | 123   | 578           |                      |
+| [CrowdHuman](http://www.crowdhuman.org/) ([2018 paper](https://arxiv.org/abs/1805.00123))                                                                                                            | 15,000 |                | 339,565          |     | 22.64 |               |                      |
+| [UCF-QNRF](https://www.crcv.ucf.edu/data/ucf-qnrf/)([CL](#CL) 2018))                                                                                                                                 | 1,525  | 2013 × 2902    | 1,251,642        | 49  | 815   | 12,865        | 1.12                 |
+| [GCC](https://gjy3035.github.io/GCC-CL/) ([CCWld](#CCWld), [github](https://github.com/gjy3035/GCC-CL), [youtube](https://www.youtube.com/watch?v=Hvl7xWkIueo))                                      | 15,212 | 1080 × 1920    | 7,625,843        | 0   | 501   | 3,995         |                      |
+
+Sorted by relevance:
+1. UCF-QNRF
+2. UCF_CC_50
+3. Shanghai Tech A
+4. Shanghai Tech B
+5. WorldExpo10
+6. UCSD
+
+
+## Leaderboards
+- from the [github repo for CCWld's sota](https://github.com/gjy3035/Awesome-Crowd-Counting), but sorted (best are last)
+
+### ShanghaiTech Part A (Dense Crowds)
+
+| Year-Conference/Journal | Methods                                         | MAE   | MSE      | PSNR                              | SSIM                             | Params                            | Pre-trained Model |
+| ----------------------- | ----------------------------------------------- | ----- | -------- | --------------------------------- | -------------------------------- | --------------------------------- | ----------------- |
+| 2015-CVPR               | [Cross-Scene](#Cross-Scene)                     | 181.8 | 277.7    |                                   |                                  |                                   |                   |
+| 2019--AAAI              | [GWTA-CCNN](#GWTA-CCNN)                         | 154.7 | 229.4    | -                                 | -                                | -                                 | -                 |
+| 2019                    | [SR-GAN](#SR-GAN)                               | 118.0 | 169.5    |                                   |                                  |                                   |                   |
+| 2016--CVPR              | [MCNN](#MCNN)                                   | 110.2 | 173.2    | 21.4<sup>[CSR](#CSR)</sup>        | 0.52<sup>[CSR](#CSR)</sup>       | 0.13M<sup>[SANet](#SANet)</sup>   | None              |
+| 2018--TII               | [NetVLAD](#NetVLAD)                             | 107.6 | 169.3    |                                   |                                  |                                   |                   |
+| 2017--AVSS              | [CMTL](#CMTL)                                   | 101.3 | 152.4    | -                                 | -                                | -                                 | None              |
+| 2018--AAAI              | [TDF-CNN](#TDF-CNN)                             | 97.5  | 145.1    | -                                 | -                                | -                                 | -                 |
+| 2017--CVPR              | [SCNN](#SCNN)                                   | 90.4  | 135.0    | -                                 | -                                | -                                 | VGG-16            |
+| 2018                    | [DensityAdaptation](#DensityAdaptation)         | 88.5  | 147.6    |                                   |                                  |                                   |                   |
+| 2018                    | [HeadAttention](#HeadAttention)                 | 87.3  | 132.7    |                                   |                                  |                                   |                   |
+| 2018--WACV              | [SaCNN](#SaCNN)                                 | 86.8  | 139.2    | -                                 | -                                | -                                 | -                 |
+| 2017--ICIP              | [MSCNN](#MSCNN)                                 | 83.8  | 127.4    | -                                 | -                                | -                                 | -                 |
+| 2018                    | [Inhomogeneous](#Inhomogeneous)                 | 81.8  | 134.7    |                                   |                                  |                                   |                   |
+| 2017                    | [CNNMRF](#CNNMRF)                               | 79.1  | 130.1    |                                   |                                  |                                   |                   |
+| 2018--WACV              | [ISaCNN](#ISaCNN)                               | 75.84 | 124.88   |                                   |                                  |                                   |                   |
+| 2018--CVPR              | [ACSCP](#ACSCP)                                 | 75.7  | 102.7    | -                                 | -                                | 5.1M                              | None              |
+| 2017--IJCAI             | [DSRM](#DSRM)                                   | 74.4  | 114.7    |                                   |                                  |                                   |                   |
+| 2019--Neurocomputing    | [MRA-CNN](#MRA-CNN)                             | 74.2  | 112.5    |                                   |                                  |                                   |                   |
+| 2018--CVPR              | [L2R](#L2R) (Multi-task,   Keyword)             | 73.6  | 112.0    | -                                 | -                                | -                                 | VGG-16            |
+| 2017--ICCV              | [CP-CNN](#CP-CNN)                               | 73.6  | 106.4    | 21.72<sup>[TEDNet](#TEDNet)</sup> | 0.72<sup>[TEDNet](#TEDNet)</sup> | 68.4M<sup>[TEDNet](#TEDNet)</sup> | -                 |
+| 2018--CVPR              | [IG-CNN](#IG-CNN)                               | 72.5  | 118.2    | -                                 | -                                | -                                 | -                 |
+| 2018--CVPR              | [D-ConvNet-v1](#D-ConvNet)                      | 73.5  | 112.3    | -                                 | -                                | -                                 | -                 |
+| 2018--CVPR              | [L2R](#L2R) (Multi-task,   Query-by-example)    | 72.0  | 106.6    | -                                 | -                                | -                                 | VGG-16            |
+| 2018                    | [SingleColumn](#SingleColumn)                   | 71.9  | 117.9    |                                   |                                  |                                   |                   |
+| 2018--IEEEAccess        | [DA-Net](#DA-Net)                               | 71.6  | 104.9    |                                   |                                  |                                   |                   |
+| 2019--Neurocomputing    | [DDCN](#DDCN)                                   | 71.5  | 110.4    |                                   |                                  |                                   |                   |
+| 2018--ECCV              | [ic-CNN](#ic-CNN) (one stage)                   | 69.8  | 117.3    | -                                 | -                                | -                                 | -                 |
+| 2018--IJCAI             | **[DRSAN](#DRSAN)**                             | 69.3  | **96.4** | -                                 | -                                | -                                 | -                 |
+| 2018--ECCV              | [ic-CNN](#ic-CNN) (two stages)                  | 68.5  | 116.2    | -                                 | -                                | -                                 | -                 |
+| 2018--CVPR              | [CSRNet](#CSR)                                  | 68.2  | 115.0    | 23.79                             | 0.76                             | 16.26M<sup>[SANet](#SANet)</sup>  | VGG-16            |
+| 2019                    | [IkNNMaps](#IkNNMaps)                           | 68.0  | 117.7    |                                   |                                  |                                   |                   |
+| 2018--ECCV              | [SANet](#SANet)                                 | 67.0  | 104.5    | -                                 | -                                | 0.91M                             | None              |
+| 2019                    | [DecomposedUncertainty](#DecomposedUncertainty) | 66.4  | 111.1    |                                   |                                  |                                   |                   |
+|                         | CSRNet-keras                                    | 65.92 |          |                                   |                                  |                                   |                   |
+| 2019                    | [PSDDN](#PSDDN)                                 | 65.9  | 112.3    |                                   |                                  |                                   |                   |
+| 2019                    | [MaskAware](#MaskAware)                         | 65.7  | 107.8    |                                   |                                  |                                   |                   |
+| 2019--ICASSP            | [ASD](#ASD)                                     | 65.6  | 98.0     | -                                 | -                                | -                                 | -                 |
+| 2019                    | [CCWld](#CCWld)                                 | 64.8  | 107.5    |                                   |                                  |                                   |                   |
+| 2019                    | [TEDNet](#TEDNet)                               | 64.2  | 109.1    | 25.88                             | 0.83                             | 1.63M                             |                   |
+| 2019                    | [ScaleAware](#ScaleAware)                       | 63.7  | 104.1    |                                   |                                  |                                   |                   |
+| 2018 / 2019             | [ADCrowdNet](#ADCrowdNet)                       | 63.2  | 98.9     |                                   |                                  |                                   |                   |
+| 2018/2019               | [PerspectiveAware](#PerspectiveAware)           | 62.4  | 102.0    |                                   |                                  |                                   |                   |
+| 2019                    | [ContextAware](#ContextAware)                   | 62.3  | 100.0    |                                   |                                  |                                   |                   |
+| 2019--WACV              | [SPN](#SPN)                                     | 61.7  | 99.5     |                                   |                                  |                                   |                   |
+| 2019                    | [DualPath](#DualPath)                           | 59.8  | 99.3     |                                   |                                  |                                   |                   |
+| 2019                    | [WNet](#WNet)                                   | 59.5  | 97.3     |                                   |                                  |                                   |                   |
+| 2019                    | [PaDNet](#PaDNet)                               | 59.2  | 98.1     |                                   |                                  |                                   |                   |
+
+### ShanghaiTech Part B (Sparse Crowds)
+
+| Year-Conference/Journal | Methods                                         | MAE   | MSE   |
+| ----------------------- | ----------------------------------------------- | ----- | ----- |
+| 2015-CVPR               | [Cross-Scene](#Cross-Scene)                     | 32.00 | 49.80 |
+| 2016--CVPR              | [MCNN](#MCNN)                                   | 26.4  | 41.3  |
+| 2016--CVPR              | [MCNN](#MCNN) ([CCWld](#CCWld) impl)            | 26.3  | 39.5  |
+| 2017--CVPR              | [SCNN](#SCNN)                                   | 21.6  | 33.4  |
+| 2018--CVPR              | [DecideNet](#DecideNet)                         | 21.53 | 31.98 |
+| 2018--TII               | [NetVLAD](#NetVLAD)                             | 21.4  | 33.9  |
+| 2018--CVPR              | [DecideNet + R3](#DecideNet)                    | 20.75 | 29.42 |
+| 2018--AAAI              | [TDF-CNN](#TDF-CNN)                             | 20.7  | 32.8  |
+| 2018--TIP               | [BSAD](#BSAD)                                   | 20.2  | 35.6  |
+| 2017--ICCV              | [CP-CNN](#CP-CNN)                               | 20.1  | 30.1  |
+| 2017--AVSS              | [CMTL](#CMTL)                                   | 20.0  | 31.1  |
+| 2016--CVPR              | [MCNN](#MCNN) (GCC pretraining)                 | 18.8  | 28.2  |
+| 2018--CVPR              | [D-ConvNet-v1](#D-ConvNet)                      | 18.7  | 26.0  |
+| 2017                    | [CNNMRF](#CNNMRF)                               | 17.8  | 26.0  |
+| 2017--ICIP              | [MSCNN](#MSCNN)                                 | 17.7  | 30.2  |
+| 2018                    | [DensityAdaptation](#DensityAdaptation)         | 17.6  | 26.8  |
+| 2018--CVPR              | [ACSCP](#ACSCP)                                 | 17.2  | 27.4  |
+| 2019--WACV              | [OtherScaleAware](#OtherScaleAware)             | 16.86 | 28.41 |
+| 2018--WACV              | [SaCNN](#SaCNN)                                 | 16.2  | 25.8  |
+| 2018                    | [HeadAttention](#HeadAttention)                 | 15.6  | 26.4  |
+| 2017--IJCAI             | [DSRM](#DSRM)                                   | 15.2  | 29.0  |
+| 2018--IEEEAccess        | [DA-Net](#DA-Net)                               | 15.0  | 21.9  |
+| 2018--CVPR              | [L2R](#L2R) (Multi-task,   Query-by-example)    | 14.4  | 23.8  |
+| 2019--Neurocomputing    | [DDCN](#DDCN)                                   | 13.8  | 20.1  |
+| 2018--CVPR              | [L2R](#L2R) (Multi-task,   Keyword)             | 13.7  | 21.4  |
+| 2018--CVPR              | [IG-CNN](#IG-CNN)                               | 13.6  | 21.1  |
+| 2019                    | [IkNNMaps](#IkNNMaps)                           | 13.4  | 21.4  |
+| 2018                    | [Inhomogeneous](#Inhomogeneous)                 | 13.2  | 20.1  |
+| 2019-Neurocomputing     | [MRA-CNN](#MRA-CNN)                             | 11.9  | 21.3  |
+| 2019                    | [MaskAware](#MaskAware)                         | 11.7  | 16.4  |
+| 2018--IJCAI             | [DRSAN](#DRSAN)                                 | 11.1  | 18.2  |
+| 2108--WACV              | [ISaCNN](#ISaCNN)                               | 11.03 | 18.55 |
+|                         | CSRNet-keras                                    | 11.01 |       |
+| 2019                    | [CCWld](#CCWld) (VGG-16)                        | 11.0  | 17.1  |
+| 2018--ECCV              | [ic-CNN](#ic-CNN) (two stages)                  | 10.7  | 16.0  |
+| 2018--CVPR              | [CSRNet](#CSR) ([CCWld](#CCWld) impl)           | 10.6  | 16.6  |
+| 2018--CVPR              | [CSRNet](#CSR)                                  | 10.6  | 16.0  |
+| 2018--ECCV              | [ic-CNN](#ic-CNN) (one stage)                   | 10.4  | 16.7  |
+| 2018--CVPR              | [CSRNet](#CSR) (GCC pretraining)                | 10.1  | 15.7  |
+| 2019                    | [DecomposedUncertainty](#DecomposedUncertainty) | 9.4   | 15.1  |
+| 2019--WACV              | [SPN](#SPN)                                     | 9.4   | 14.4  |
+| 2019                    | [CCWld](#CCWld) (VGG-16, GCC pretraining)       | 9.4   | 14.4  |
+| 2018                    | [SingleColumn](#SingleColumn)                   | 9.3   | 14.4  |
+| 2019                    | [PSDDN](#PSDDN)                                 | 9.1   | 14.2  |
+| 2019                    | [CCWld](#CCWld) (ResNet-101)                    | 8.9   | 14.3  |
+| 2019--ICASSP            | [ASD](#ASD)                                     | 8.5   | 13.7  |
+| 2018--ECCV              | [SANet](#SANet)                                 | 8.4   | 13.6  |
+| 2019                    | [TEDNet](#TEDNet)                               | 8.2   | 12.8  |
+| 2019                    | [ScaleAware](#ScaleAware)                       | 8.2   | 12.7  |
+| 2019                    | [PaDNet](#PaDNet)                               | 8.1   | 12.2  |
+| 2019                    | [ContextAware](#ContextAware)                   | 7.8   | 12.2  |
+| 2018 / 2019             | [ADCrowdNet](#ADCrowdNet)                       | 7.6   | 13.9  |
+| 2019                    | [CCWld](#CCWld) (ResNet-101, GCC pretrain)      | 7.6   | 13.0  |
+| 2018/2019               | [PerspectiveAware](#PerspectiveAware)           | 7.6   | 11.8  |
+| 2019                    | [DualPath](#DualPath)                           | 6.9   | 10.9  |
+| 2019                    | [WNet](#WNet)                                   | 6.9   | 10.3  |
+
+### UCF-QNRF
+
+| Year-Conference/Journal | Method                                              | C-MAE | C-NAE | C-MSE                     | DM-MAE   | DM-MSE | DM-HI  | L- Av. Precision | L-Av. Recall | L-AUC |
+| ----------------------- | --------------------------------------------------- | ----- | ----- | ------------------------- | -------- | ------ | ------ | ---------------- | ------------ | ----- |
+| 2013--CVPR              | [Idrees 2013](#Idrees2013)<sup>[CL](#CL)</sup>      | 315   | 0.63  | 508                       | -        | -      | -      | -                | -            | -     |
+| 2016--CVPR              | [MCNN](#MCNN) ([CCWld](#CCWld) impl)                | 281.2 |       | 445.0                     |          |        |        |                  |              |       |
+| 2016--CVPR              | [MCNN](#MCNN)<sup>[CL](#CL)</sup>                   | 277   | 0.55  | 426.4<sup>[CL](#CL)</sup> | 0.006670 | 0.0223 | 0.5354 | 59.93%           | 63.50%       | 0.591 |
+| 2017--AVSS              | [CMTL](#CMTL)<sup>[CL](#CL)</sup>                   | 252   | 0.54  | 514                       | 0.005932 | 0.0244 | 0.5024 | -                | -            | -     |
+| 2017--CVPR              | [SCNN](#SCNN)<sup>[CL](#CL)</sup>                   | 228   | 0.44  | 445                       | 0.005673 | 0.0263 | 0.5301 | -                | -            | -     |
+| 2016--CVPR              | [MCNN](#MCNN) (GCC pretraining)                     | 199.8 |       | 311.2                     |          |        |        |                  |              |       |
+| 2019                    | [CCWld](#CCWld) (VGG-16)                            | 143.3 |       | 240.3                     |          |        |        |                  |              |       |
+| 2018--ECCV              | [CL](#CL)                                           | 132   | 0.26  | 191                       | 0.00044  | 0.0017 | 0.9131 | 75.8%            | 59.75%       | 0.714 |
+| 2019                    | [CCWld](#CCWld) (VGG-16, GCC pretrained)            | 124.7 |       | 203.5                     |          |        |        |                  |              |       |
+| 2018--CVPR              | [CSRNet](#CSR) ([CCWld](#CCWld) impl)               | 120.3 |       | 208.5                     |          |        |        |                  |              |       |
+| 2019                    | [CCWld](#CCWld) (ResNet-101)                        | 114.8 |       | 192.0                     |          |        |        |                  |              |       |
+| 2019                    | [TEDNet](#TEDNet)                                   | 113   |       | 188                       |          |        |        |                  |              |       |
+| 2018--CVPR              | [CSRNet](#CSR) ([CCWld](#CCWld) impl, GCC pretrain) | 112.4 |       | 185.6                     |          |        |        |                  |              |       |
+| 2019                    | [ContextAware](#ContextAware)                       | 107   |       | 183                       |          |        |        |                  |              |       |
+| 2019                    | [IkNNMaps](#IkNNMaps)                               | 104   | 0.209 | 172                       |          |        |        |                  |              |       |
+| 2019                    | [CCWld](#CCWld) (ResNet-101, GCC pretrained)        | 102.0 |       | 171.4                     |          |        |        |                  |              |       |
+| 2019                    | [DualPath](#DualPath)                               | 100.8 |       | 174.5                     |          |        |        |                  |              |       |
+| 2019                    | [ScaleAware](#ScaleAware)                           | 97.5  |       | 167.8                     |          |        |        |                  |              |       |
+| 2019                    | [PaDNet](#PaDNet)                                   | 96.5  |       | 170.2                     |          |        |        |                  |              |       |
+
+### UCF_CC_50 (Dense Crowds)
+
+| Year-Conference/Journal | Methods                                      | MAE           | MSE           |
+| ----------------------- | -------------------------------------------- | ------------- | ------------- |
+| 2013--CVPR              | [Idrees 2013](#Idrees2013)                   | 468.0 / 419.5 | 590.3 / 541.6 |
+| 2015--CVPR              | [Cross-Scene](#Cross-Scene)                  | 467.0         | 498.5         |
+| 2016--ACM MM            | [CrowdNet](#CrowdNet)                        | 452.5         | -             |
+| 2019--AAAI              | [GWTA-CCNN](#GWTA-CCNN)                      | 433.7         | 583.3         |
+| 2018--TIP               | [BSAD](#BSAD)                                | 409.5         | 563.7         |
+| 2016--CVPR              | [MCNN](#MCNN)                                | 377.6         | 509.1         |
+| 2016--ECCV              | [CNN-Boosting](#CNN-Boosting)                | 364.4         | -             |
+| 2017--ICIP              | [MSCNN](#MSCNN)                              | 363.7         | 468.4         |
+| 2018--AAAI              | [TDF-CNN](#TDF-CNN)                          | 354.7         | 491.4         |
+| 2016--ECCV              | [Hydra-CNN](#Hydra-CNN)                      | 333.73        | 425.26        |
+| 2017--AVSS              | [CMTL](#CMTL)                                | 322.8         | 397.9         |
+| 2017--CVPR              | [SCNN](#SCNN)                                | 318.1         | 439.2         |
+| 2018--WACV              | [SaCNN](#SaCNN)                              | 314.9         | 424.8         |
+| 2018--TII               | [NetVLAD](#NetVLAD)                          | 311.3         | 401.8         |
+| 2018                    | [Inhomogeneous](#Inhomogeneous)              | 309.6         | 402.64        |
+| 2017--ICCV              | [CP-CNN](#CP-CNN)                            | 298.8 / 295.8 | 320.9         |
+| 2018--CVPR              | [L2R](#L2R) (Multi-task,   Query-by-example) | 291.5         | 397.6         |
+| 2018--CVPR              | [IG-CNN](#IG-CNN)                            | 291.4         | 349.4         |
+| 2018--CVPR              | [ACSCP](#ACSCP)                              | 291.0         | 404.6         |
+| 2018                    | [AMDCN](#AMDCN)                              | 290.82        |               |
+| 2018--CVPR              | [D-ConvNet-v1](#D-ConvNet)                   | 288.4         | 404.7         |
+| 2019--Neurocomputing    | [DDCN](#DDCN)                                | 286.2         | 479.6         |
+| 2017--ICCV              | [ConvLSTM-nt](#ConvLSTM)                     | 284.5         | 297.1         |
+| 2019                    | [MaskAware](#MaskAware)                      | 283.3         | 411.6         |
+| 2018                    | [SingleColumn](#SingleColumn)                | 280.5         | 332.8         |
+| 2018--CVPR              | [L2R](#L2R) (Multi-task,   Keyword)          | 279.6         | 388.9         |
+| 2018                    | [HeadAttention](#HeadAttention)              | 279.5         | 377.8         |
+| 2019--WACV              | [OtherScaleAware](#OtherScaleAware)          | 271.6         | 391.00        |
+| 2016--ICIP              | [Shang 2016](#Shang2016)                     | 270.3         | -             |
+| 2018--CVPR              | [CSRNet](#CSR)                               | 266.1         | 397.5         |
+| 2018--ECCV              | [ic-CNN](#ic-CNN) (two stages)               | 260.9         | 365.5         |
+| 2019--WACV              | [SPN](#SPN)                                  | 259.2         | 335.9         |
+| 2018--ECCV              | [SANet](#SANet)                              | 258.4         | 334.9         |
+| 2018 / 2019             | [ADCrowdNet](#ADCrowdNet)                    | 257.1         | 363.5         |
+| 2017                    | [CNNMRF](#CNNMRF)                            | 254.1         | 352.5         |
+| 2019                    | [TEDNet](#TEDNet)                            | 249.4         | 354.5         |
+| 2018/2019               | [PerspectiveAware](#PerspectiveAware)        | 241.7         | 320.7         |
+| 2019--Neurocomputing    | [MRA-CNN](#MRA-CNN)                          | 240.8         | 352.6         |
+| 2019                    | [ScaleAware](#ScaleAware)                    | 238.2         | 310.8         |
+| 2019                    | [IkNNMaps](#IkNNMaps)                        | 237.76        | 305.7         |
+| 2018                    | [DensityAdaptation](#DensityAdaptation)      | 234.5 / 228.9 | 289.6 / 283.2 |
+| 2019                    | [DualPath](#DualPath)                        | 219.6         | 316.2         |
+| 2018--IJCAI             | **[DRSAN](#DRSAN)**                          | 219.2         | **250.2**     |
+| 2019                    | [CCWld](#CCWld)                              | 214.2         | 318.2         |
+| 2019                    | [ContextAware](#ContextAware)                | 212.2         | 243.7         |
+| 2019                    | [WNet](#WNet)                                | 201.9         | 309.2         |
+| 2019--ICASSP            | [ASD](#ASD)                                  | 196.2         | 270.9         |
+| 2019                    | [PaDNet](#PaDNet)                            | 185.8         | 278.3         |
+
+### WorldExpo'10
+
+| Year-Conference/Journal | Method                                | S1      | S2       | S3      | S4      | S5      | Avg. |
+| ----------------------- | ------------------------------------- | ------- | -------- | ------- | ------- | ------- | ---- |
+| 2015--CVPR              | [Cross-Scene](#Cross-Scene)           | 9.8     | 14.1     | 14.3    | 22.2    | 3.7     | 12.9 |
+| 2017--ICCV              | [ConvLSTM-nt](#ConvLSTM)              | 8.6     | 16.9     | 14.6    | 15.4    | 4.0     | 11.9 |
+| 2016--CVPR              | [MCNN](#MCNN)                         | 3.4     | 20.6     | 12.9    | 13.0    | 8.1     | 11.6 |
+| 2017--ICIP              | [MSCNN](#MSCNN)                       | 7.8     | 15.4     | 14.9    | 11.8    | 5.8     | 11.7 |
+| 2018--AAAI              | [TDF-CNN](#TDF-CNN)                   | 2.7     | 23.4     | 10.7    | 17.6    | 3.3     | 11.5 |
+| 2018--CVPR              | [IG-CNN](#IG-CNN)                     | 2.6     | 16.1     | 10.15   | 20.2    | 7.6     | 11.3 |
+| 2017--ICCV              | [ConvLSTM](#ConvLSTM)                 | 7.1     | 15.2     | 15.2    | 13.9    | 3.5     | 10.9 |
+| 2017--ICCV              | [Bidirectional   ConvLSTM](#ConvLSTM) | 6.8     | 14.5     | 14.9    | 13.5    | 3.1     | 10.6 |
+| 2018--ECCV              | **[ic-CNN](#ic-CNN) (two stages)**    | 17.0    | 12.3     | 9.2     | **8.1** | 4.7     | 10.3 |
+| 2018--TIP               | [BSAD](#BSAD)                         | 4.1     | 21.7     | 11.9    | 11.0    | 3.5     | 10.5 |
+| 2019--Neurocomputing    | [DDCN](#DDCN)                         | 4.8     | 16.2     | 12.4    | 10.9    | 4.9     | 9.8  |
+| 2019                    | [MaskAware](#MaskAware)               | 3.0     | 16.7     | 11.6    | 12.     | 4.1     | 9.6  |
+| 2017--CVPR              | [SCNN](#SCNN)                         | 4.4     | 15.7     | 10.0    | 11.0    | 5.9     | 9.4  |
+| 2019                    | [CCWld](#CCWld)                       |         |          |         |         |         | 9.4  |
+| 2018                    | [Inhomogeneous](#Inhomogeneous)       | 4.1     | 11.1     | 10.7    | 16.2    | 5.0     | 9.4  |
+| 2018--CVPR              | [DecideNet](#DecideNet)               | 2.0     | 13.14    | 8.9     | 17.4    | 4.75    | 9.23 |
+| 2018--CVPR              | **[D-ConvNet-v1](#D-ConvNet)**        | **1.9** | 12.1     | 20.7    | 8.3     | **2.6** | 9.1  |
+| 2017--ICCV              | [CP-CNN](#CP-CNN)                     | 2.9     | 14.7     | 10.5    | 10.4    | 5.8     | 8.86 |
+| 2018--CVPR              | **[CSRNet](#CSR)**                    | 2.9     | **11.5** | **8.6** | 16.6    | 3.4     | 8.6  |
+| 2018--WACV              | [SaCNN](#SaCNN)                       | 2.6     | 13.5     | 10.6    | 12.5    | 3.3     | 8.5  |
+| 2018                    | [SingleColumn](#SingleColumn)         | 1.8     | 9.6      | 14.2    | 13.3    | 3.2     | 8.4  |
+| 2018--ECCV              | [SANet](#SANet)                       | 2.6     | 13.2     | 9.0     | 13.3    | 3.0     | 8.2  |
+| 2019                    | [TEDNet](#TEDNet)                     | 2.3     | 10.1     | 11.3    | 13.8    | 2.6     | 8.0  |
+| 2018                    | [HeadAttention](#HeadAttention)       | 2.5     | 13.0     | 9.7     | 10.0    | 4.0     | 7.84 |
+| 2018 / 2019             | [PerspectiveAware](#PerspectiveAware) | 2.3     | 12.5     | 9.1     | 11.2    | 3.8     | 7.8  |
+| 2018--IJCAI             | [DRSAN](#DRSAN)                       | 2.6     | 11.8     | 10.3    | 10.4    | 3.7     | 7.76 |
+| 2018--CVPR              | [ACSCP](#ACSCP)                       | 2.8     | 14.05    | 9.6     | **8.1** | 2.9     | 7.5  |
+| 2019--Neurocomputing    | [MRA-CNN](#MRA-CNN)                   | 2.4     | 11.4     | 9.3     | 10.5    | 3.7     | 7.5  |
+| 2018 / 2019             | [ADCrowdNet](#ADCrowdNet)             |         |          |         |         |         | 7.3  |
+| 2019                    | [ContextAware](#ContextAware)         | 2.4     | 9.4      | 8.8     | 11.2    | 4.0     | 7.2  |
+
+### UCSD
+
+| Year-Conference/Journal | Method                                | MAE  | MSE  |
+| ----------------------- | ------------------------------------- | ---- | ---- |
+| 2017--ICCV              | [ConvLSTM-nt](#ConvLSTM)              | 1.73 | 3.52 |
+| 2016--ECCV              | [Hydra-CNN](#Hydra-CNN)               | 1.65 | -    |
+| 2017--CVPR              | [SCNN](#SCNN)                         | 1.62 | 2.10 |
+| 2015--CVPR              | [Cross-scene](#Cross-scene)           | 1.60 | 3.31 |
+| 2017--ICCV              | [ConvLSTM](#ConvLSTM)                 | 1.30 | 1.79 |
+| 2018--CVPR              | [CSRNet](#CSR)                        | 1.16 | 1.47 |
+| 2017--ICCV              | [Bidirectional   ConvLSTM](#ConvLSTM) | 1.13 | 1.43 |
+| 2016--ECCV              | [CNN-Boosting](#CNN-Boosting)         | 1.10 | -    |
+| 2016--CVPR              | [MCNN](#MCNN)                         | 1.07 | 1.35 |
+| 2018--CVPR              | [ACSCP](#ACSCP)                       | 1.04 | 1.35 |
+| 2019--WACV              | [SPN](#SPN)                           | 1.03 | 1.32 |
+| 2018--ECCV              | [SANet](#SANet)                       | 1.02 | 1.29 |
+| 2018--TIP               | [BSAD](#BSAD)                         | 1.0  | 1.40 |
+| 2018 / 2019             | [ADCrowdNet](#ADCrowdNet)             | 0.98 | 1.25 |
+| 2018 / 2019             | [PerspectiveAware](#PerspectiveAware) | 0.89 | 1.18 |
+| 2019                    | [PaDNet](#PaDNet)                     | 0.85 | 1.06 |
+| 2019                    | [DualPath](#DualPath)                 | 0.82 | 1.07 |
+| 2019                    | [WNet](#WNet)                         | 0.82 | 1.05 |
+
+### GCC
+
+| Method          | MAE (Random) | MSE (Random) | PSNR (Random) | SSIM (Random) | MAE (x-cam) | MSE (x-cam) | PSNR (x-cam) | SSIM (x-cam) | MAE (x-loc) | MSE (x-loc) | PSNR (x-loc) | SSIM (x-loc) |
+| --------------- | ------------ | ------------ | ------------- | ------------- | ----------- | ----------- | ------------ | ------------ | ----------- | ----------- | ------------ | ------------ |
+| [MCNN](#MCNN)   | 100.9        | 217.6        | 24.00         | 0.838         | 110.0       | 221.5       | 23.81        | 0.842        | 154.8       | 340.7       | 24.05        | 0.857        |
+| [CSR](#CSR)     | 38.2         | 87.6         | 29.52         | 0.829         | 61.1        | 134.9       | 29.03        | 0.826        | 92.2        | 220.1       | 28.75        | 0.842        |
+| [FCN](#FCN)     | 42.3         | 98.7         | 30.10         | 0.889         | 61.5        | 156.6       | 28.92        | 0.874        | 97.5        | 226.8       | 29.33        | 0.866        |
+| [CCWld](#CCWld) | 36.2         | 81.1         | 30.21         | 0.904         | 56.0        | 129.7       | 29.17        | 0.889        | 89.3        | 216.8       | 29.50        | 0.906        |
+
+## Papers
+
+### 2019 (ccwld sota github repo)
+- <a name="PSDDN"></a> **PSDDN**: [Liu, Shi, Zhao, Wang (Sichuan, Rennes) - Point in, Box out: Beyond Counting Persons in Crowds (Apr 2019)](https://arxiv.org/abs/1904.01333)
+- <a name="ADCrowdNet"></a> **ADCrowdNet**: [Liu, Long, Zou, Niu, Pan, Wu (Guangdong) - ADCrowdNet: An Attention-injective Deformable Convolutional Network for Crowd Understanding (Nov 2018 / Mar 2019)](https://arxiv.org/abs/1811.11968)
+- <a name="SPN"></a> **SPN**: [Chen, Bin, Sang, Gao (Huazhong) - Scale Pyramid Network for Crowd Counting (2019 WACV)](https://ieeexplore.ieee.org/document/8658887)
+
+### 2018 (not included in original ccwld perf tables)
+- <a name="AMDCN"></a> **AMCDN**: [Deb, Ventura (Georgia Tech, Colorado) - An Aggregated Multicolumn Dilated Convolution Network for Perspective-Free Counting (2018, CVPR)](http://openaccess.thecvf.com/content_cvpr_2018_workshops/papers/w6/Deb_An_Aggregated_Multicolumn_CVPR_2018_paper.pdf)
+    - [keras/tf](https://github.com/diptodip/counting)
+- <a name="ISaCNN"></a> **ISaCNN**: [Sang, Wu, Luo, Xiang, Zhang, Hu, Xia (Chongqing) - Improved Crowd Counting Method Based on Scale-Adaptive Convolutional Neural Network (2018 WACV)](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8643345)
+    - based on <a name="SaCNN"></a> **SaCNN**: [Zhang, Shi, Chen (Tencent / Rennes / Shabnghai) - Crowd counting via scale-adaptive convolutional neural network (Nov 2017 / Feb 2018)](https://arxiv.org/abs/1711.04433)
+        - [caffe](https://github.com/miao0913/SaCNN-CrowdCounting-Tencent_Youtu)
+        - [youtube](https://www.youtube.com/watch?v=Pg5usd40EsE)
+
+### 2018 (ccwld sota github repo)
+- <a name="D-ConvNet"></a> **D-Convnet**: [Shi, Zhang, Liu, Cao, Ye, Cheng, Zheng (Bern / ...) - Crowd Counting with Deep Negative Correlation Learning (2018, CVPR)](http://openaccess.thecvf.com/content_cvpr_2018/papers/Shi_Crowd_Counting_With_CVPR_2018_paper.pdf)
+    - [caffe](https://github.com/shizenglin/Deep-NCL)
+
+### recent arXiv papers
+Not included in the leaderboards in the original ccwld github repo.
+
+- <a name="CCWld"><a> **CCWld**: [Wang, Gao, Lin, Yuan (Shaanxi) - Learning from Synthetic Data for Crowd Counting in the Wild (Mar 2019)](https://arxiv.org/abs/1903.03303)
+    - [sota](https://gjy3035.github.io/reading/Awesome-Crowd-Counting.html)
+    - [sota](https://github.com/gjy3035/Awesome-Crowd-Counting/blob/master/README.md#SANet) github (more up-to-date)
+    - [pytorch](https://github.com/gjy3035/C-3-Framework)
+    - SFCN [pytorch](https://github.com/gjy3035/GCC-SFCN)
+- <a name="WNet"></a> **WNet**: [Valloli, Mehta (CDAC India) - W-Net: Reinforced U-Net for Density Map Estimation (Mar 2019)](https://arxiv.org/abs/1903.11249)
+- <a name="DecomposedUncertainty"></a> **DecomposedUncertainty**: [Oh, Olsen, Ramamurthy (Columbia, IBM) - Crowd Counting with Decomposed Uncertainty (Mar 2019)](http://arxiv.org/abs/1903.07427)
+- <a name="TEDNet"></a> **TEDNet**: [Jiang, Xiao, Zhang, Zeng, Cao, Doermann, Shao (Beijing) - Crowd Counting and Density Estimation by Trellis Encoder-Decoder Networks (Mar 2019)](https://arxiv.org/abs/1903.00853)
+- <a name="SR-GAN"></a> **SR-GAN**: [Olmschenk, Zhu, Tang (CUNY)- Generalizing semi-supervised generative adversarial networks to regression using feature contrasting (Nov 2018 / Feb 2019)](https://arxiv.org/abs/1811.11269)
+    - [pytorch](https://github.com/golmschenk/sr-gan)
+- <a name="IkNNMaps"></a> **IkNNMaps**: [Olmschenk, Tang, Zhu (CUNY) -  Improving Dense Crowd Counting Convolutional Neural Networks using Inverse k-Nearest Neighbor Maps and Multiscale Upsampling](https://arxiv.org/abs/1902.05379)
+- <a name="DualPath"></a> **DualPath**: [Zhu, Zhao, Lu, Lin, Peng, Yao (Qiniu) - Dual Path Multi-Scale Fusion Networks with Attention for Crowd Counting (Feb 2019)](https://arxiv.org/abs/1902.01115)
+- <a name="ScaleAware"></a> **ScaleAware**: [Varior, Shuai, Tiche, Modolo (Amazon) - Scale-Aware Attention Network for Crowd Counting (Jan / Feb 2019)](https://arxiv.org/abs/1901.06026)
+- <a name="OtherScaleAware"></a> **OtherScaleAware**: [Hossain, Hosseinzadeh, Chanda, Wang (Manitoba) - Crowd Counting Using Scale-Aware Attention Networks (Mar 2019, WACV)](https://arxiv.org/abs/1903.02025)
+- <a name="MaskAware"></a> **MaskAware**: [Jiang, Lu, Lei, Liu (Nanjing) - Mask-aware networks for crowd counting (Dec 2018)](https://arxiv.org/abs/1901.00039)
+- <a name="ContextAware"></a> **ContextAware**: [Liu, Salzmann, Fua (Lausanne) - Context-Aware Crowd Counting (Nov 2018)](https://arxiv.org/abs/1811.10452)
+- <a name="PaDNet"></a> **PaDNet**: [Tian, Lei, Zhang, Wang (Shanghai / PennState) - PaDNet: Pan-Density Crowd Counting (Nov 2018 / Feb 2019)](https://arxiv.org/abs/1811.02805)
+    - [pytorch](https://github.com/aster000/my_crowd_counting) undocumented
+    - [pytorch](https://github.com/loukey/MANet/) undocumented
+- <a name="StackedPooling"></a> **StackedPooling**: [Huang, Li, Cheng, Zhang, Hauptmann (Zhejiang, Jiaotong, CMU) - Stacked Pooling: Improving Crowd Counting by Boosting Scale Invariance (Aug 2018)](https://arxiv.org/abs/1808.07456)
+    - [pytorch](http://github.com/siyuhuang/crowdcount-stackpool)
+- <a name="SingleColumn"></a> **SingleColumn**: [Wang, Xiao, Xie, Qiu, Zhen, Cao (Beijing) - In Defense of Single-column Networks for Crowd Counting (Aug 2018)](https://arxiv.org/abs/1808.06133)
+    - here might be some [keras](https://github.com/MRJTM/crowd_counting) code
+    - here is cpp deploymwent code [tensorflow](https://github.com/MRJTM/crowd_counting_CPP)
+- <a name="PerspectiveAware"></a> **PerspectiveAware**: [Shi, Yang, Xu, Chen (Rennes / Peking / Tongji) - Perspective-Aware CNN For Crowd Counting / Revisiting Perspective Information for Efficient Crowd Counting (Jul 2018 / Apr 2019)](https://arxiv.org/abs/1807.01989)
+    - [caffe/matlab](https://github.com/wlixin/PACNN-PerspectiveAware-CrowdCounting)
+- <a name="HeadAttention"></a> **HeadAttention**: [Zhang, Zhou, Chang, Kot (Jinan, Nanyang) - Attention to Head Locations for Crowd Counting (Jun 2018)](https://arxiv.org/abs/1806.10287)
+- <a name="DensityAdaptation"></a> **DensityAdaptation**: [Wang, Shao, Lu, Ye, Pu, Zheng (Shanghai) - Crowd Counting with Density Adaption Networks (Jun 2018)](https://arxiv.org/abs/1806.10040)
+- <a name="GeometricConstraints"></a> **GeometricConstraints**: [Liu, Lis, Salzmann, Fua (Lausanne) - Geometric and Physical Constraints for Head Plane Crowd Density Estimation in Videos (Mar 2018)](https://arxiv.org/abs/1803.08805)
+- <a name="HeatmapRegulation"></a> **HeatmapRegulation**: [Aich, Stavness (Saskatchewan) - Improving Object Counting with Heatmap Regulation (Mar / May 2018)](https://arxiv.org/abs/1803.05494)]
+    - pytorch [code](https://github.com/littleaich/heatmap-regulation)
+- <a name="DepthInfo"></a> **DepthInfo**: [M. Xu, Ge, Jiang, Cui, Lv, Zhou, C. Xu (Zhengzhou) - Depth Information Guided Crowd Counting for Complex Crowd Scenes (Mar / Apr 2018, Pattern Recognition Letters)](https://arxiv.org/abs/1803.02256)
+- <a name="Inhomogeneous"></a> **Inhomogeneous**: [Li, He, Wu, Kasmani, Wang, Luo, Lin (Guangzhou / Sidney) - Structured Inhomogeneous Density Map Learning for Crowd Counting (Jan 2018)](https://arxiv.org/abs/1801.06642)
+- <a name="CNNMRF"></a> **CNNMRF**: [Han, Wan, Yao, Hou (Shanghai) - Image Crowd Counting Using Convolutional Neural Network and Markov Random Field (Jun / Oct 2017, JACI)](https://arxiv.org/abs/1706.03686)
+    - matlab / keras [code](https://github.com/hankong/crowd-counting)
+    - based on the above [keras/matlab](https://github.com/princenarula222/People-Counting)
+- <a name="MRA-CNN"></a> **MRA-CNN**: [Zhang, Zhou, Chang, Kot (Jinan) - Multi-Resolution Attention Convolutional Neural Network for Crowd Counting](https://www.sciencedirect.com/science/article/pii/S0925231218312542)
+    - maybe this is the code [pytorch](https://github.com/yamad07/CrowdCounting)?
+
+### others:
+- <a name="DDCN"></a> **DDCN**: [Wang, Yin, Tang, Li (U of Science China) - Removing Background Interference for Crowd Counting via de-background Detail Convolutional Network (2019, Neurocomputing)](https://www.sciencedirect.com/science/article/pii/S0925231218315042)
+- <a name="SL2R"></a> **SL2R**: [Liu, vand de Weijer, Bagdanov (Barcelona) - Exploiting Unlabeled Data in CNNs by Self-supervised Learning to Rank (Feb 2019, PAMI)](https://arxiv.org/abs/1902.06285)
+    - based on <a name="L2R"></a> **L2R**: [Liu, vand de Weijer, Bagdanov (Barcelona) - Leveraging Unlabeled Data for Crowd Counting by Learning to Rank (Mar 2018, CVPR)](https://arxiv.org/abs/1803.03095)
+        - [caffe](https://github.com/xialeiliu/CrowdCountingCVPR18)
+        - [blog](https://medium.com/@ahmdtaha/leveraging-unlabeled-data-for-crowd-counting-by-learning-to-rank-6ea2aa6e7d67)
+- <a name="DSRM"></a> **DSRM**: [Yao, Han, Wan, Hou (Shanghai) - Deep Spatial Regression Model for Image Crowd Counting (Oct 2017, IJCAI 2018)](https://arxiv.org/abs/1710.09757)
+- https://arxiv.org/abs/1903.10442
+- https://arxiv.org/abs/1605.08803
+- interesting: [Schröder, Senst, Bochinski, Sikora (Berlin) - Optical Flow Dataset and Benchmark for Visual Crowd Analysis (Nov 2018)](https://arxiv.org/abs/1811.07170)
+    - optical flow eval code [python](https://github.com/tsenst/CrowdFlow)
+- [Titto, Quispe, Rivera, Pedrini (Campinas) - Where are the People? A Multi-Stream Convolutional Neural Network for Crowd Counting via Density Map from Complex Images (2019, IWSSIP)](http://www.liv.ic.unicamp.br/~quispe/papers/crowd_multistream.pdf)
+    - [pytorch](https://github.com/RQuispeC/multi-stream-crowd-counting)
+- https://github.com/stijnh/scalable-crowd-analysis
+- https://arxiv.org/abs/1809.08766 - https://github.com/aditya-vora/FCHD-Fully-Convolutional-Head-Detector
+
+#### Classics from [CCWld](#CCWld):
+- <a name="MCNN"></a> **MCNN**: [Zhang, Zhou, Chen, Gao, Ma (Shanghai) - Single-Image Crowd Counting via Multi-Column Convolutional Neural Network (2016 CVPR)](https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Zhang_Single-Image_Crowd_Counting_CVPR_2016_paper.pdf)
+    - [tensorflow](https://github.com/aditya-vora/crowd_counting_tensorflow), [pytorch](https://github.com/svishwa/crowdcount-mcnn) code
+    - [keras/tensorflow](https://github.com/priyanka-kasture/Crowd-Counting-with-MCNNs)
+    - [keras/tensorflow](https://github.com/uestcchicken/crowd-counting-MCNN)
+    - [huh?](https://github.com/leeyeehoo/Reduplication-of-Single-Image-Crowd-Counting-via-MCNN-on-UCF-Dataset)
+    - [tensorflow](https://github.com/wwq-online/MCNN_REPRODUCTION)
+    - [pytorch](https://github.com/cryax/crowd_counting)
+    - [pytorch](https://github.com/IndigoPurple/CrowdCount-MCNN)
+    - [tensorflow](https://github.com/GZWQ/crowd-counting-cnn)
+    - [keras](https://github.com/ZhengPeng7/Multi_column_CNN_in_Keras)
+    - [pytorch](https://github.com/loukey/MANet) undocumented
+    - [keras](https://github.com/ybcc2015/MCNN_in_Keras)
+- <a name="CSR"></a> **[CSR]**: [Li, Zhang, Chen (Illinois) - CSRNet: Dilated Convolutional Neural Networks for Understanding the Highly Congested Scenes (2018 CVPR)](https://arxiv.org/abs/1802.10062)
+    - pytorch [code](https://github.com/leeyeehoo/CSRNet-pytorch/tree/master)
+    - caffe [model](https://github.com/leeyeehoo/CSRNet)
+    - [keras / tensorflow](https://github.com/Neerajj9/CSRNet-keras)
+    - [keras](https://github.com/ZhengPeng7/CSRNet-Keras)
+    - [tensorflow](https://github.com/yuto3o/TF-crowdcounting)
+    - [pytorch](https://github.com/BIGKnight/CSRNet_pytorch)
+    - [keras](https://github.com/TanishBansal/CrowdCounting)
+    - [tensorflow](https://github.com/owliz/graduate_code_crowd_counting)
+    - [pytorch](https://github.com/loukey/MANet) undocumented
+- <a name="FCN"></a> **FCN**-based:
+    - [Long, Shelhamer, Darrell (Berkeley) - Fully convolutional networks for semantic segmentation (Nov 2014 / Mar 2015 CVPR)](https://arxiv.org/abs/1411.4038)
+    - [Marsden, McGuinness, Little,  O’Connor (Dublin) - Fully convolutional crowd counting on highly congested scenes (Dec 2016 / Jan 2017)](https://arxiv.org/abs/1612.00220)
+    - [MSCNN](#MSCNN)
+    - [MCNN](#MCNN)
+
+#### Others:
+- <a name="Hydra-CNN"></a> **Hydra-CNN**: [Onoro-Rubio, Lopez-Sastre (Alcala) - Towards Perspective-Free Object Counting With Deep Learning (2016 ECCV)](http://agamenon.tsc.uah.es/Investigacion/gram/publications/eccv2016-onoro.pdf)
+    - [caffe](https://github.com/gramuah/ccnn)
+    - [youtube](https://www.youtube.com/watch?v=juXI2WpS4K0)
+- <a name="MSCNN"></a> **MSCNN**: [Zeng, Xu, Cai, Qiu, Zhang (Guangzhou) - Multi-scale Convolutional Neural Networks for Crowd Counting (Feb 2017)](https://arxiv.org/abs/1702.02359)
+    - tensorflow [code](https://github.com/Ling-Bao/mscnn)
+    - [tensorflow](https://github.com/Yuqing2018/MSCNN_CrowdCounting)
+    - [ios](https://github.com/dimroc/count)
+- <a name="CL"></a> **CL**: [Idrees, Tayyabm Athrey, Zhang, Al-Maadeed, Rajpoot, Shah (CMU) - Composition loss for counting, density map estimation and localization in dense crowds (Aug 2018, ECCV)](https://arxiv.org/abs/1808.01050)
+- <a name="SANet"></a> **[SANet]**: [Cao, Wang, Zhao, Su (Beijing) - Scale Aggregation Network for Accurate and Efficient Crowd Counting (2018 ECCV)](http://openaccess.thecvf.com/content_ECCV_2018/papers/Xinkun_Cao_Scale_Aggregation_Network_ECCV_2018_paper.pdf)
+    - [keras](https://github.com/ZhengPeng7/SANet-Keras)
+    - [pytorch](undocumented)
+- <a name="DRSAN"></a> **[DRSAN]**: [Liu, Wang, Li, Ouyang, Lin (Guangzhou, Sydney) - Crowd Counting using Deep Recurrent Spatial-Aware Network (Jul 2018, IJCAI)](https://arxiv.org/abs/1807.00601)
+- <a name="ACSCP"></a> **ACSCP**: [Shen, Xu, Ni, Wang, Hu, Yang (Shanghai) - Crowd Counting via Adversarial Cross-Scale Consistency Pursuit (2018 CVPR)](http://openaccess.thecvf.com/content_cvpr_2018/papers/Shen_Crowd_Counting_via_CVPR_2018_paper.pdf)
+    - [tensorflow](https://github.com/Ling-Bao/ACSCP_cGAN)
+    - [pytorch](https://github.com/RQuispeC/pytorch-ACSCP)
+- w-vlad
+
+#### Classics from [WNet](#WNet)
+- <a name="Cross-Scene"></a> **Cross-Scene**: [Zhang, Li, Wang, Yang (Shanghai / Hong Kong) - Cross-scene Crowd Counting via Deep Convolutional Neural Networks (2015 CVPR)](https://www.cv-foundation.org/openaccess/content_cvpr_2015/papers/Zhang_Cross-Scene_Crowd_Counting_2015_CVPR_paper.pdf)
+
+#### Classics from [DecomposedUncertainty](#DecomposedUncertainty):
+- <a name="CMTL"></a> **CMTL**: [Sindagi, Patel (Rutgers) - CNN-based cascaded multi-task learning of high-level prior and density estimation for crowd counting (2017 AVSS)](https://arxiv.org/abs/1707.09605)
+    - [pytorch](https://github.com/svishwa/crowdcount-cascaded-mtl)
+
+#### Classics in most sotas:
+- <a name="Switching-CNN"></a> **Switching-CNN**: [Sam, Surya, Babu (Bangalore) - Switching Convolutional Neural Network for Crowd Counting (Aug 2017 CVPR)]
+    - [lasagne/theano](https://github.com/val-iisc/crowd-counting-scnn)
+    - [lasagne/theano](https://github.com/enningxie/scnn)
+- <a name="CP-CNN"></a> **CP-CNN**: [Sindagi, Patel (Rutgers) - Generating High-Quality Crowd Density Maps using Contextual Pyramid CNNs (Aug 2017, ICCV)](https://arxiv.org/abs/1708.00953)
+- MCNN, CMTL, CSRNet
+
+### Others with code from ccwld sota repo
+- lcfcn
+- cac
+- <a name="DA-Net"></a> [Zou, Su, Qu, Zhou (Huazhong) - DA-Net: Learning the Fine-Grained Density Distribution With Deformation Aggregation Network (2018 IEEAccess)](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8497050)
+    - [pytorch](https://github.com/BigTeacher-777/DA-Net-Crowd-Counting)
+- netvlad (abismal results, matlab code)
+- CrowdNet: [caffe](https://github.com/davideverona/deep-crowd-counting_crowdnet)
+[pytorch](https://github.com/prateekmalhotra/crowd-counting-I)
+- cross-scene: [caffe](https://github.com/wk910930/crowd_density_segmentation)
+- dr-resnet:[paper](https://arxiv.org/abs/1805.05633), [code](https://github.com/linzhirui1992/Crowd-Counting) - pretty bad results
+
+### others with code:
+- abismal: [paper](https://ieeexplore.ieee.org/document/7986133)
+[code](https://github.com/prateekmalhotra/crowd-counting-GAN)
+- [mizerie](https://github.com/darpan-jain/crowd-counting-using-tensorflow)
+- from nvidia with love, not documented [pytorch](https://github.com/BigTeacher-777/pix2pixHD-Crowd-counting)
+- from china with love, not documented [paddlepaddle](https://github.com/suhaisheng/BDS_Crowd_Counting)
+- ? [pytorch](https://github.com/Newbeeyoung/CrowdCounting)
+- ? [keras](https://github.com/nicci1771/CrowdCounting)
+- multi-attention (?): [pytorch](https://github.com/yamad07/CrowdCounting)
+    - poate paper-ul [asta](https://www.sciencedirect.com/science/article/pii/S0925231218312542)
+- melange: https://github.com/miaortizma/crowd-counting-demo
+- sota paper, csr, mcnn [here](https://github.com/ZhengPeng7/crowd_counting)
+- annotation code: https://github.com/princenarula222/Crowd_Annotation
+- dilated resnet gan (?) [tensorflow](https://github.com/taoshenhaha/Dillated_resnet_GAN)
+- ? [keras](https://github.com/Kishan-Athrey/Crowd-Counting-)
+- ? [keras](https://github.com/euleo/Crowd_Counting)
+- this guy says he implements csr, mcnn, padnet !!!, sa-net and something new
+called manet TODO: check it out !!! https://github.com/loukey/MANet/tree/master/src/models
+    - but gives no performance measurements
+    - maybe this [paper](https://dl.acm.org/citation.cfm?id=3127898), but I don't think so
+    - code looks pretty good
+- [2017 paper](https://arxiv.org/abs/1612.00220), [caffe](https://github.com/Michael-Xiu/Caffe-Efficient_Crowd_Counting) - rather crappy results
+- probably garbage https://github.com/zen-star/YuncongCrowdCounting
+
+
+## Top Performers:
+- UCF-QNRF: MAE < 140 (min=100):
+    - included: [CL](#CL), [CCWld](#CCWld), [CSRNet](#CSR), [TEDNet](#TEDNet),
+    [ContextAware](#ContextAware), [IkNNMaps](#IkNNMaps), [DualPath](#DualPath),
+    [ScaleAware](#ScaleAware), [PaDNet](#PaDNet)
+    - excluded: [Idrees 2013](#Idrees2013), [MCNN](#MCNN), [CMTL](#CMTL),
+    [SCNN](#SCNN)
+- UCF_CC_50: MAE < 270 (min=190):
+    - included: [CSRNet](#CSR), [ic-CNN](#ic-CNN), [SPN](#SPN), [SANet](#SANet),
+    [ADCrowdNet](#ADCrowdNet), [CNNMRF](#CNNMRF), [TEDNet](#TEDNet),
+    [PerspectiveAware](#PerspectiveAware), [MRA-CNN](#MRA-CNN),
+    [ScaleAware](#ScaleAware),
+    [IkNNMaps](#IkNNMaps), [DensityAdaptation](#DensityAdaptation),
+    [DualPath](#DualPath), [DRSAN](#DRSAN), [CCWld](#CCWld),
+    [ContextAware](#ContextAware), [WNet](#WNet), [ASD](#ASD), [PaDNet](#PaDNet)
+    - excluded: [Idrees 2013](#Idrees2013), [Cross-Scene](#Cross-Scene),
+    [CrowdNet](#CrowdNet), [GWTA-CCNN](#GWTA-CCNN),[BSAD](#BSAD), [MCNN](#MCNN),
+    [CNN-Boosting](#CNN-Boosting), [MSCNN](#MSCNN), [TDF-CNN](#TDF-CNN),
+    [Hydra-CNN](#Hydra-CNN), [CMTL](#CMTL), [SCNN](#SCNN),
+    [SaCNN](#SaCNN), [Inhomogeneous](#Inhomogeneous), [CP-CNN](#CP-CNN),
+    [L2R](#L2R), [IG-CNN](#IG-CNN), [ACSCP](#ACSCP), [AMDCN](#AMDCN),
+    [D-ConvNet-v1](#D-ConvNet), [DDCN](#DDCN), [ConvLSTM-nt](#ConvLSTM),
+    [MaskAware](#MaskAware), [SingleColumn](#SingleColumn),
+    [HeadAttention](#HeadAttention), [OtherScaleAware](#OtherScaleAware),
+    [Shang 2016](#Shang2016)
+    - should probably be also excluded, as it is not consistent with other
+      datasets
+- Shanghai Tech Part B: MSE < 13 (min=7):
+    - included: [MRA-CNN](#MRA-CNN), [MaskAware](#MaskAware), [DRSAN](#DRSAN),
+    [ISaCNN](#ISaCNN), [CCWld](#CCWld), [ic-CNN](#ic-CNN), [CSRNet](#CSR),
+    [DecomposedUncertainty](DecomposedUncertainty), [SPN](#SPN),
+    [SingleColumn](#SingleColumn), [PSDDN](#PSDDN), [ASD](#ASD),
+    [SANet](#SANet), [TEDNet](#TEDNet), [ScaleAware](#ScaleAware),
+    [PaDNet](#PaDNet), [ContextAware](#ContextAware), [ADCrowdNet](#ADCrowdNet),
+    [PerspectiveAware](#PerspectiveAware), [DualPath](#DualPath), [WNet](#WNet)
+    - excluded: [Cross-Scene](#Cross-Scene), [MCNN](#MCNN),
+    [SCNN](#SCNN), [DecideNet](#DecideNet), [TDF-CNN](#TDF-CNN),
+    [BSAD](#BSAD), [CP-CNN](#CP-CNN), [CMTL](#CMTL), [D-ConvNet-v1](#D-ConvNet),
+    [CNNMRF](#CNNMRF), [MSCNN](#MSCNN), [DensityAdaptation](#DensityAdaptation),
+    [ACSCP](#ACSCP), [OtherScaleAware](#OtherScaleAware), [SaCNN](#SaCNN),
+    [HeadAttention](#HeadAttention), [DSRM](#DSRM), [DA-Net](#DA-Net),
+    [L2R](#L2R), [DDCN](#DDCN), [L2R](#L2R), [IG-CNN](#IG-CNN),
+    [IkNNMaps](#IkNNMaps), [Inhomogeneous](#Inhomogeneous)
+- Shanghai Tech Part A: MSE < 80 (min=60):
+    - included: [CNNMRF](#CNNMRF), [ISaCNN](#ISaCNN), [ACSCP](#ACSCP),
+    [DSRM](#DSRM), [MRA-CNN](#MRA-CNN), [L2R](#L2R), [CP-CNN](#CP-CNN),
+    [IG-CNN](#IG-CNN),
+    [D-ConvNet-v1](#D-ConvNet), [L2R](#L2R), [SingleColumn](#SingleColumn),
+    [DA-Net](#DA-Net), [DDCN](#DDCN), [ic-CNN](#ic-CNN), [DRSAN](#DRSAN),
+    [CSRNet](#CSR), [IkNNMaps](#IkNNMaps), [SANet](#SANet),
+    [DecomposedUncertainty](#DecomposedUncertainty), [PSDDN](#PSDDN),
+    [MaskAware](#MaskAware), [ASD](#ASD), [CCWld](#CCWld), [TEDNet](#TEDNet),
+    [ScaleAware](#ScaleAware), [ADCrowdNet](#ADCrowdNet),
+    [PerspectiveAware](#PerspectiveAware), [ContextAware](#ContextAware),
+    [SPN](#SPN), [DualPath](#DualPath), [WNet](#WNet), [PaDNet](#PaDNet)
+    - excluded: [Cross-Scene](#Cross-Scene), [GWTA-CCNN](#GWTA-CCNN),
+    [SR-GAN](#SR-GAN), [MCNN](#MCNN), [CMTL](#CMTL), [TDF-CNN](#TDF-CNN),
+    [SCNN](#SCNN), [DensityAdaptation](#DensityAdaptation),
+    [HeadAttention](#HeadAttention), [SaCNN](#SaCNN), [MSCNN](#MSCNN),
+    [Inhomogeneous](#Inhomogeneous)
+- WorldExpo'10: Avg < 10 (min = 7, max=13):
+    - included: [DDCN](#DDCN), [MaskAware](#MaskAware), [SCNN](#SCNN),
+    [CCWld](#CCWld), [Inhomogeneous](#Inhomogeneous), [DecideNet](#DecideNet),
+    [D-ConvNet-v1](#D-ConvNet), [CP-CNN](#CP-CNN), [CSRNet](#CSR),
+    [SaCNN](#SaCNN), [SingleColumn](#SingleColumn), [SANet](#SANet),
+    [TEDNet](#TEDNet), [HeadAttention](#HeadAttention),
+    [PerspectiveAware](#PerspectiveAware), [DRSAN](#DRSAN), [ACSCP](#ACSCP),
+    [MRA-CNN](#MRA-CNN), [ADCrowdNet](#ADCrowdNet),
+    [ContextAware](#ContextAware)
+    - excluded: [Cross-Scene](#Cross-Scene), [ConvLSTM-nt](#ConvLSTM),
+    [MCNN](#MCNN), [MSCNN](#MSCNN), [TDF-CNN](#TDF-CNN), [IG-CNN](#IG-CNN),
+    [ConvLSTM](#ConvLSTM), [Bidirectional   ConvLSTM](#ConvLSTM),
+    [ic-CNN](#ic-CNN), [BSAD](#BSAD)
+    - we ignore this (inconsistent with other datasets)
+
+- never bad:
+    - [CCWld](#CCWld) - PyTorch
+    - [SANet](#SANet) - keras (unofficial impl, crappy results), undocumented pytorch code
+    - [ADCrowdNet](#ADCrowdNet) - no code
+    - [TEDNet](#TEDNet) - no code
+    - [ISaCNN](#ISaCNN) - caffe
+    - [PerspectiveAware](#PerspectiveAware) - caffe / matlab
+    - [ContextAware](#ContextAware) - no code
+    - [PaDNet](#PaDNet) - undocumented pytorch code
+    - [SPN](#SPN) - caffe (not available)
+    - [PSDDN](#PSDDN) - no code
+    - [CL](#CL) - no code
+    - [ScaleAware](#ScaleAware) - MXNet (not available)
+    - [WNet](#WNet) - PyTorch (not available)
+    - [CSRNet](#CSRNet) - PyTorch, keras/tensorflow
+    - [DRSAN](#DRSAN) - tensorflow (not available)
+    - [ASD](#ASD) - PyTorch (not available)
+    - [ic-CNN](#ic-CNN) - no code
+    - [DecomposedUncertainty](#DecomposedUncertainty) - no code
+    - [DualPath](#DualPath) - no code
+    - [MRA-CNN](#MRA-CNN) - probably no code
+
+- sometimes good:
+    - [SingleColumn](#SingleColumn) - no code
+    - [MaskAware](#MaskAware) - no code
+    - [L2R](#L2R) - caffe model (should avoid, excluded 3/4)
+    - [ACSCP](#ACSCP) - tensorflow, pytorch (excluded 2/4)
+    - [DensityAdaptation](#DensityAdaptation) - pytorch, not available
+    - [DDCN](#DDCN) - no code
+    - [IkNNMaps](#IkNNMaps) - pytorch ([SR-GAN](#SR-GAN)), (good results, one bad dataset)
+    - [DSRM](#DSRM) - tensorflow, not available
+    - [CP-CNN](#CP-CNN) - no code
+    - [D-ConvNet-v1](#D-ConvNet-v1) - caffe (excluded from most dataset decent performance, not recommended)
+    - [CNNMRF](#CNNMRF) - keras + matlab (probably better to avoid, rather bad results - 2/3 excluded)
+    - [IG-CNN](#IG-CNN) - dunno if code, but should probably avoid (excluded 3/4)
+
+- with code:
+    - never bad:
+        - [CCWld](#CCWld) - PyTorch
+        - [ISaCNN](#ISaCNN) - caffe
+        - [CSRNet](#CSRNet) - PyTorch, keras/tensorflow, tensorflow
+        - [PerspectiveAware](#PerspectiveAware) - caffe / matlab
+        - [SANet](#SANet) - keras (unofficial impl, crappy results), undocumented pytorch code
+        - [PaDNet](#PaDNet) - undocumented pytorch code
+   - sometimes good:
+       - [IkNNMaps](#IkNNMaps) - pytorch ([SR-GAN](#SR-GAN)), (good results, one bad dataset)
+       - [ACSCP](#ACSCP) - tensorflow, pytorch (excluded 2/4)
+       - [L2R](#L2R) - caffe model (should avoid, excluded 3/4)
+       - [D-ConvNet-v1](#D-ConvNet-v1) - caffe (excluded from most dataset decent performance, not recommended)
+       - [CNNMRF](#CNNMRF) - keras + matlab (probably better to avoid, rather bad results - 2/3 excluded)
+       - [DA-Net](#DA-Net) - pytorch
+
+- candidates:
+    - [CCWld](#CCWld) - PyTorch
+    - [ISaCNN](#ISaCNN) - caffe
+    - [CSRNet](#CSRNet) - PyTorch, keras/tensorflow, tensorflow
+    - [PerspectiveAware](#PerspectiveAware) - caffe / matlab
+    - [IkNNMaps](#IkNNMaps) - pytorch ([SR-GAN](#SR-GAN)), (good results, one bad dataset)
+    - [DA-Net](#DA-Net) - pytorch
+
+| Model               | SHA MAE  | SHB MAE | UCF-QNRF C-MAE | UCF_CC_50 MAE | WorldExpo10 Avg. |
+| ------------------- | -------- | ------- | -------------- | ------------- | ---------------- |
+| CCWld               | 64.8     | **7.6** | **102.0**      | **214.2**     | 9.4              |
+| PerspectiveAware    | **62.4** | **7.6** |                | 241.7         | **7.8**          |
+| CSRNet/CSRNet-keras | 65.92    | 10.1    | 112.4          | 266.1         | 8.6              |
+| IkNNMaps            | 68.0     | 13.4    | 104            | 237.76        |                  |
+| DA-Net              | 71.6     | 15.0    |                |               |                  |
+| ISaCNN              | 75.84    | 11.03   |                |               |                  |
+
+- best implementation: csrnet
+- some results (ccwld, csrnet) are pretrained on GCC
+- we eliminate DA-Net and ISaCNN, as they have worse results and crappier implementations
+
+#### Error diff wrt hypothetical best (%)
+| Model               | SHA  (20%) | SHB (15%) | UCF-QNRF (40%) | UCF_CC_50 (25%) | WorldExpo10 (0%) | Weighted Mean |
+| ------------------- | ---------- | --------- | -------------- | --------------- | ---------------- | ------------- |
+| CCWld               | 3.84       | 0         | 0              | 0               | 20.51            | 0.77          |
+| PerspectiveAware    | 0          | 0         |                | 12.84           | 0                | 3.21          |
+| CSRNet/CSRNet-keras | 5.64       | 32.89     | 10.2           | 24.23           | 10.26            | 16.20         |
+| IkNNMaps            | 8.9        | 76.32     | 1.96           | 11.0            |                  | 16.76         |
+
+### Error diff wrt CCwld (%)
+| Model                 | Weighted Mean Diff | Impl                      |
+| --------------------- | ------------------ | ------------------------- |
+| CCwld                 | 0                  | pytorch                   |
+| PerspectiveAware      | 2.44               | caffe/matlab              |
+| CSRNet / CSRNet-keras | 15.43              | keras, tf, pytorch, caffe |
+| IkNNMaps              | 15.99              | pytorch                   |
+
+# Conclusions:
+- final candidates: either CCWld or CSRNet
+- CSRNet has 15% higher error than CCWld, but CSRNet has keras/tf impl, whereas CCWld is only pytorch
+- PerspectiveAware might have better results than CCWld if pretrained on synthetic data
+
+# Notes on selected papers
+
+## CSRNet:
+- nice, simple architecture
+- end-to-end convolutional
+- dilated filters to avoid pooling
+    - high-res output
+    - large perceptive fields
+
+### Performance
+
+#### Original Paper
+- Shanghai Tech Part A:
+    - MAE: 68.2
+    - MSE: 115.0
+    - PSNR: 23.79
+    - SSIM: 0.76
+- Shanghai Tech Part B:
+    - MAE: 10.6
+    - MSE: 16.0
+- UFC_CC_50:
+    - MAE: 266.1
+    - MSE: 397.5
+- WorldExpo'10:
+    - Avg: 8.6
+- UCSD:
+    - MAE: 1.16
+    - MSE: 1.47
+
+#### [CCWld](#CCWld) implementation [pytorch](https://github.com/gjy3035/C-3-Framework)
+
+TODO: CCWDLD C3 Framework has A LOT of models !!!!
+
+- Shanghai Tech Part A:
+    - MAE: 69.3
+    - MSE: 111.9
+- Shanghai Tech Part B:
+    - ImageNet pretraining for feature extractor:
+        - MAE: 10.6
+        - MSE: 16.6
+    - ImageNet pretraining for feature extractor, pretraining on GCC:
+        - MAE: 10.1
+        - MSE: 15.7
+- UCF-QNRF:
+    - ImageNet pretraining for feature extractor:
+        - MAE: 120.3
+        - MSE: 208.5
+    - ImageNet pretraining for feature extractor, pretraining on GCC:
+        - MAE: 112.4
+        - MSE: 185.6
+
+#### [pytorch](https://github.com/leeyeehoo/CSRNet-pytorch/tree/master)
+- Shanghai Tech Part A MAE: 66.4
+- Shanghai Tech Part B MAE: 10.6
+
+#### [keras/tensorflow](https://github.com/Neerajj9/CSRNet-keras)
+- Shanghai Tech Part A MAE: 65.92
+- Shanghai Tech Part B MAE: 11.01
+
+#### [keras](https://github.com/ZhengPeng7/CSRNet-Keras)
+- Shanghai Tech Part A MAE: 73.089
+- Shanghai Tech Part B MAE: 10.6
+
+#### [tensorflow](https://github.com/yuto3o/TF-crowdcounting)
+- I think they mean MAE/MSE, not MSE/RMSE
+- I think they use Shanghai Tech Part A for eval
+- vanilla CSRNet:
+    - MSE: 69.57
+    - RMSE: 106.5
+- CSRNet w/ regularizer:
+    - MSE: 68.17
+    - RMSE: 107.7
+- CSRNet w/ batch norm:
+    - MSE: 71.92
+    - RMSE: 105.6]
+
+#### [pytorch](https://github.com/BIGKnight/CSRNet_pytorch/blob/master/model.py)
+- experimental results not presented explicitly, so we report the best perfs we
+could find in the logs
+- Shanghai Tech Part A:
+    - MAE: 87.83
+    - MSE: 130.37
+
+#### [keras](https://github.com/TanishBansal/CrowdCounting)
+- just inference
+- no performance report
+
+#### [tensorflow](https://github.com/owliz/graduate_code_crowd_counting)
+- does not report performance
+
+#### [pytorch](https://github.com/loukey/MANet):
+- rather undocumented
+- probably code for a paper that has not come out yet
