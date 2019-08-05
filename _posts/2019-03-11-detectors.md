@@ -1,3 +1,13 @@
+---
+layout: post
+date: 2019-03-11
+title: State of the Art Object Detection
+author: Bogdan Budescu
+categories: [deep learning, computer vision]
+tags: [sota, deep learning, portofolio]
+# image: img.png
+---
+
 # State of the art detectors
 
 This document provides a quick review of the most influential papers on object detection (i.e., classification and
