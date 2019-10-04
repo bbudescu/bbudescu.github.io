@@ -4,6 +4,8 @@ title: About
 permalink: /about/
 ---
 
+This page provides a brief outline of my professional life. It looks a bit narcissistic, but it's not.
+
 # 1. Definition
 I am a machine learning and computer vision engineer. I help companies big and small explore the way in which computers can understand things and help people.
 
