@@ -26,6 +26,8 @@ The first time I got paid for the code I wrote was in July 2008 and that's how I
 
 Ok, there was a 1-year long break (2009-2010), during which I only wrote the code for a website, but I was still a student back then and had a job as a computer hardware sales/repair-rep, so don't blame me for it.
 
+Back in 2008 I was writing Java code, but I've switched to C++ and Python in the mean time.
+
 ## C++:
 Between July 2010 and August 2016, C++ was the language in which I spent most of the time writing code. Since then, I only use it occasionally, so one could say that my skills are a bit rusty. However, to my surprise, at the time of this writing (October 2019), when having to write a samll C++ project for one of my clients, I discovered that I still remember enough of the tricks I used to know so as to produce a decent quality code.
 
@@ -43,9 +45,17 @@ Some of the tech I've used with C++:
     - most of the functionality I used to use has now been (or is in the process of being) standardized in C++11/14/17/..., so you get it in most `stl` implementations bundled with compilers
     - `Random`: the mersenne-twister implementation in boost was way better then the one in the stl packaged with the C++ compiler delivered with Visual Studio 2015. This actually made a whole bunch of difference when training some neural nets.
     - `Bimap`, `Filesystem`, `Python`, and `Test`
-- I remember being able to define type traits and other crazy template stuff (e.g., I found myself using the CRTP at some point), I used to understand move semantics and rvalue references and other things I can't remember right now/
-- Google `Test` library
-- BLAS API (Intel's MKL, OpenBLAS)
+- OpenCV (more on this in the section about Computer Vision, below)
+- Google's `Test` library
+- BLAS API implementations (Intel's MKL, OpenBLAS, NVidia's cuBLAS)
+- a few design patterns (actually, mostly idioms) I remember emerging in my code: pimpl, visitor (via double dispatch), RAII (scope guards), observer, SFINAE, decorator, factory, CAS (copy-and-swap), COW (copy-on-write), nifty counter (aka Schwarz counter), type traits, CRTP, move semantics and rvalue references.
+- Please bear in mind that I don't remember all the crazy template stuff I used to do, and that I might have to freshen up my knowledge on some of the design patterns I mentioned at the previous point before being able to use them proficiently again.
+- for most of my projects, I've usually had to spend a bit of time and effort for compatibility across various platforms, compilers, IDEs and ABIs. To that end, I've, e.g., built my code using various compilers (Microsoft, Intel, GNU, LLVM) on Linux and Windows, defining COM-compatible APIs for Microsoft Windows dlls, used `cmake` for builds (gnerating Microsoft's Visual Studio, JetBrains' CLion, UNIX makefile - although I'm not very proficient with those, and, a long time ago Eclipse CDT projects), static code analysis tools (various linters and checks for standards / coding guidelines)
+- I'm not a `git` guru, but I can find my way around enough to respect a flow.
+
+
+## CUDA C/C++
+I haven't written a kernel since 2011, but I've used libraries like cudnn, cuBLAS and thrust for implementing operations required  for training and applying neural nets. I think the lowest level code I wrote lately (i.e., the closest to the metal of the GPU) was helping someone else use CUDA streams to accelerate some neural nets.
 
 # Details
 
