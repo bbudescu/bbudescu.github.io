@@ -21,7 +21,7 @@ Check out my [LinkedIn profile](https://www.linkedin.com/in/bbudescu/) for speci
 
 # 4. Skills
 
-For details on the skills I've earned during my career, check out the [tech spec page]()
+For details on the skills I've earned during my career, check out the [tech spec page](/tech_specs/)
 
 
 # 5. Contact
