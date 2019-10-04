@@ -89,6 +89,7 @@ Way too many to build an exhaustive list, but I'll try and cover what I think mi
 - `multiprocessing`: in conjunction with `array`, `ctypes` and `numpy` for shared memory buffers (real-time video processing) and syncronization primitives (queues, events, locks, condition variables etc.)
 - `asyncio`: not an expert just yet, I've used it in conjuction with `aiohttp`, `aiofiles` and `aiodns`
 - `threading`, `collections`, `json`, `pickle`, `csv`, `argparse` and many more...
+
 ##### 4.1.2.1.2. (Somewhat) General Purpose
 - `numpy`: in almost all projects have used at least some part of numpy. Being the _Lingua Franca_ when it comes to express data operations (structure definition, storage, access , slicing etc.), no matter what its source and nature is (tabular, images, numeric series etc.)
     - honoroable mention for usefulness and speed: `numpy.linalg`
