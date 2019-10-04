@@ -4,10 +4,8 @@ title: Tech Specs
 permalink: /tech_specs/
 ---
 
-
 Time and again, potential customers have asked me to tell give them a more detailed explanation of the skills I've earned over time. I got tired of writing e-mails, so now I'll just list them here, so anybody who is (_that_) interested in the specific technologies I've used can have an in-depth look.
 
-This section is kind of lengthy and, hence, boring, so feel free to skip it.
 
 In terms of the of generality / specialization (and, to some degree, of chronology), this is a **bottom-up** presentation of my skills. For a top-down approach, please read the following sub-sections in reverse order.
 
