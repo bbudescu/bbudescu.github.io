@@ -4,7 +4,7 @@ title: About
 permalink: /about/
 ---
 
-This page provides a brief outline of my professional life. It looks a bit narcissistic, but it's not.
+This page provides a brief outline of my professional life. It looks a bit narcissistic, but it's not. At some point I realized it started to sound like an interview with myself that no one asked for, but, actually, people have asked for it, and I just obliged.
 
 # 1. Definition
 I am a machine learning and computer vision engineer. I help companies big and small explore the way in which computers can understand things and help people.
