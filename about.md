@@ -19,7 +19,7 @@ Check out my [LinkedIn profile](https://www.linkedin.com/in/bbudescu/) for speci
 
 # 4. Tech Specs
 
-Time and again, potential customers have asked me to tell give them a more detailed explanation of the skills I've earned over time. I got tired of writing e-mails, so now I'll just list them here, so that anybody that is (that) interested in the specific technologies I've used can have an in-depth outline.
+Time and again, potential customers have asked me to tell give them a more detailed explanation of the skills I've earned over time. I got tired of writing e-mails, so now I'll just list them here, so that anybody that is (that) interested in the specific technologies I've used can have an in-depth look.
 
 This section is kind of lengthy and, hence, boring, so feel free to skip it.
 
