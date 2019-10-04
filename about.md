@@ -9,9 +9,15 @@ I am a machine learning and computer vision engineer. I help companies big and s
 
 # Brief Overview
 
-# Achievements
+# The Story So Far
+Banal consecution of events: student -> intern -> employee -> freelancer -> manager
+Check out my [LinkedIn profile](https://www.linkedin.com/in/bbudescu/) for specifics.
 
 # Tech Specs
+
+Time and again, potential customers have asked me to tell give them a more detailed explanation of the skills I've earned over time. I got tired of writing e-mails, so now I'll just list them here, so that anybody that is interested of the specific technologies I've used can have an in-depth outline.
+
+This section is kind of lengthy and, hence, boring, so feel free to skip it.
 
 In terms of the of generality / specialization (and, to some degree, of chronology), this is a **bottom-up** presentation of my skills. For a top-down approach, please read the following sub-sections in reverse order.
 
