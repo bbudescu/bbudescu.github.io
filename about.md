@@ -21,7 +21,7 @@ Check out my [LinkedIn profile](https://www.linkedin.com/in/bbudescu/) for speci
 
 # 4. Tech Specs
 
-Time and again, potential customers have asked me to tell give them a more detailed explanation of the skills I've earned over time. I got tired of writing e-mails, so now I'll just list them here, so that anybody that is (that) interested in the specific technologies I've used can have an in-depth look.
+Time and again, potential customers have asked me to tell give them a more detailed explanation of the skills I've earned over time. I got tired of writing e-mails, so now I'll just list them here, so anybody who is (_that_) interested in the specific technologies I've used can have an in-depth look.
 
 This section is kind of lengthy and, hence, boring, so feel free to skip it.
 
@@ -91,6 +91,7 @@ Way too many to build an exhaustive list, but I'll try and cover what I think mi
 - `threading`, `collections`, `json`, `pickle`, `csv`, `argparse` and many more...
 ##### 4.1.2.1.2. (Somewhat) General Purpose
 - `numpy`: in almost all projects have used at least some part of numpy. Being the _Lingua Franca_ when it comes to express data operations (structure definition, storage, access , slicing etc.), no matter what its source and nature is (tabular, images, numeric series etc.)
+    - honoroable mention for usefulness and speed: `numpy.linalg`
 - `qt`(`PyQt4` / `PyQt5` / `PySide`) for GUIs and, occasionally, real OS threads (working around python's GIL)
 
 ##### 4.1.2.1.3. Deep Learning
