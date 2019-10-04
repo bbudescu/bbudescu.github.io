@@ -32,12 +32,12 @@ Between July 2010 and August 2016, C++ was the language in which I spent most of
 During the various projects I've taken part to I've had the chance to write both low level code for high performance applications and / or hardware platforms with limited resources and high level code shared with lots of other developers, who needed to understand it easily, so that they can modify, use and extend it. 
 
 Some of the tech I've used with C++:
-- stuff in C++'s `STL`, including stuff defined by the C++ 11 / 14 standars (I didn't get to C++ 17, though):
+- stuff in C++'s `stl`, including stuff defined by the C++ 11 / 14 standars (I didn't get to C++ 17, though):
     - containers: `array`, `map`, `set`, `unordered_map`, `unordered_set`, `vector`, and the lesser known (and widely underapreciated, despite haveing a very efficient `IPP`-based implementation when used compiled with Intel's compiler) `valarray`; I'm also a fan of the Oxford comma
     - algorithms: functions the like of which you would find in `<algorithm>` and `<numeric>`. Very interestingly, the `thrust` template library bundled within the CUDA toolkit exposes a very similar API, but is also able to generate CUDA kernels and / or multi-threaded implementations for the operations (under the hood, they would use stuff like `OpenMP` or Intel's Threading Building Blocks (`TBB`) to parallelize the code across available hardware).
     - functional programming elements like functors, lambdas, stuff you would find in `<fucntional>`, especially useful in conjunction with `<algorithm>`, as they allow you to expose parallelism opportunities to the runtime / compiler / framework etc.
-    - smart pointers: mainly the `unique_ptr` and `shared_ptr`, but also `weak_ptr`. Funny story: I've also implemented reference counting myself a couple of times, but would not do it again without relying on the stl implementations.
-    - multi-threading: `<thread>` API and associated stuff like atomics, locks, semaphores, condition variables, futures etc. I've also written some multi-threaded code using the Windows API, `pthread` and, at some point, I needed a fair lock, which I couldn't find an implementation of in the `STL` at the time and used the one in `boost` (or `tbb`?) instead
+    - smart pointers: mainly the `unique_ptr` and `shared_ptr`, but also `weak_ptr`. Funny story: I've also implemented reference counting myself a couple of times, but would not do it again without relying on the `stl` implementations.
+    - multi-threading: `<thread>` API and associated stuff like atomics, locks, semaphores, condition variables, futures etc. I've also written some multi-threaded code using the Windows API, `pthread` and, at some point, I needed a fair lock, which I couldn't find an implementation of in the `stl` at the time and used the one in `boost` (or `tbb`?) instead
     - other stuff, like `<chrono>` and `<random>`
 - Boost libraries:
     - most of the functionality I used to use has now been (or is in the process of being) standardized in C++11/14/17/..., so you get it in most `stl` implementations bundled with compilers
