@@ -180,6 +180,14 @@ I'm familiar with, have not yet used professionally, and would welcome the oppor
 - recursive neural nets
 - GANs
 - reinforcement learning
+- recommender systems
+- RBMs
+
+I'm familiar with, have not yet used professionally, and would not mind applying:
+- SVMs
+- Random Forests
+- Bayesian Networks
+- everything Markov: chains, networks, \[hidden\] models
 
 # 4. Misc.
 
