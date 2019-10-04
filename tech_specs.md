@@ -113,8 +113,30 @@ I haven't written a kernel since 2011, but I've used libraries like cudnn, cuBLA
 
 # 2. Computer Vision
 
-## 2.1. OpenCV
-I've been using OpenCV in almost every project I've worked on ever since I've started doing image processing (2011), in both C++ and Python. In some projects it played a central role (e.g., for the visual odometry projects), while in others it played more of a marginal one (e.g., when training neural nets, I used it mostly for implementing preprocessing operations, e.g. read images, normalization, cropping, augmentation etc.). I'm familiar with (some / most of) the functionality offered by the opencv's core, highgui, imgproc, video, calib3d modules. Below are the purposes I can remember using it for:
+## 2.1. Old School Image Processing
+
+While being a PhD student, I've been able to learn the fundamentals of classical image processing. Stuff like:
+- the pinhole camera model
+- how image various image sensors work, e.g., CCD/CMOS chips (I already forgot most of what I knew about these)
+- how medical images are acquired (X-Rays, CT and MR scanners, ultrasounds etc.)
+- a bit of physics about light and other electromagnetic radiation that can be represented as images
+- how the human eye works
+- color spaces
+- signal processing engineering stuff: interpolation, quantization, sampling etc.
+- contrast
+- histogram processing (e.g. equalization)
+- image filtering with various basic filters
+- Fourier Analysis
+- morphological image processing
+- edge detection
+- segmentation methods (e.g., by active contours)
+- etc.
+
+All this theory has proven extremely useful over the years. I've been able to apply it time and again in many circumstances. Even if the solution that worked best in the end was based on deep learning, the knowledge about the classical computer vision methods helped me design acquisition systems, perform data normalization and other kinds of preprocessing, establish performance baselines etc.
+
+## 2.2 OpenCV
+
+I've been using OpenCV in almost every project I've worked on ever since I've started doing image processing (2011), in both C++ and Python. In some projects it played a central role (e.g., for the visual odometry projects), while in others it played more of a marginal one (e.g., when training neural nets, I used it mostly for implementing preprocessing operations, e.g. read images, normalization, cropping, augmentation etc.). I'm familiar with (some / most of) the functionality offered by the opencv's `core`, `highgui`, `imgproc`, `video`, `calib3d` modules. Below are the purposes I can remember using it for:
 - reading/writing images from/to disk/network/video files
 - drawing on images, rotating/resizing/etc. and displaying them on screen
 - colorspace conversions, histograms, image filtering (e.g., image denoising, contour detection using morphological, gaussian, laplacian, sobel, gabor etc. filters), distance transforms, thresholding, connected components, segmentation, feature detection (e.g., detect contours using Canny, detect lines using the Hough transform) etc.
@@ -122,6 +144,42 @@ I've been using OpenCV in almost every project I've worked on ever since I've st
 - camera calibration, perspective transformations (e.g., image rectification), 3D reconstruction, retrieving camera position and orientation in space using the acquired image
 
 # 3. Deep Learning
+
+I've started studying neural nets in 2012 by enrolling in the first ever class on Coursera: Andrew Ng's excellent lectures on Machine Learning, while I was a PhD student (actually, I had also enrolled in Daphne Kohler's class on Probabilistic Graphical Models, but, although it was quite useful to learn about Bayesian and Markov nets, and gaining a better understanding of the formalism in probability theory, I haven't applied this kind of nets professionally just yet).
+
+I really liked the deep learning approach, so I started an internship where I could further research the subject. During my internship, my main research focus was developing novel algorithms for image segmentation using neural nets, applied on 3D medical imagery (CTs, MRIs etc.). However, my internship's focus was changed to implementing a proprietary C++ library that could train such networks rather than doing scientific research.
+
+After finishing my internship, I worked as a software developer for the same company. During my time as an employee, I've assisted others in using the library I had previously developed during my internship for training and deploying neural networks for various tasks like image {classification, object detection, semantic segmentation}, regression and other tasks related to medical imaging.
+
+As a freelancer I've developed code and trained various networks for my clients that did similar tasks as in my previous job, but on non-medical images. I've applied deep nets on images for tasks such as object {classification, bounding box and keypoint detection, segmentation, recognition} and video enhancement (denoising).
+
+I'm experienced with:
+- fully connected and convolutional layers (including implementation details for things like tensor memory layout, strides, dilated filters etc.)
+- max / average pooling layers
+- various kinds of activation functions: linear, logistic / sigmoid, tanh, ReLU, PReLU, leaky ReLU, softmax, maxout
+- normalization layers: batch normalization, local contrast normalization:
+- error / loss / cost functions:
+    - regression: MSE, RMSE
+    - keypoints detection: NME, OKS (and OKS-based mAP)
+    - bounding box detection: mAP, Focal Loss
+    - classification: binary / categorical cross-entropy, F1 Score
+    - segmentation: IoU / Dice / F1 Score
+    - recognition: triplet loss, additive angular margin (ArcFace)
+    - image enhancement: various perceptual image difference metrics
+- regularization: l2 norm (weigh decay), sparsity, \[Spatial\] dropout (binary bernoulli noise) and gaussian noise
+- optimization algorithms: \[Mini-batch | Stochastic\] Gradient Descent, RMSprop, Adagrad, Adadelta \[N\]Adam, Contrastive Divergence
+- optimizer variants: momentum, nesterov accelerated gradients
+- image preprocessing: standardization, contrast normalization, ZCA whitening etc.
+- image augmentation
+- architectures: resnet, fpn, unet, mobilenet etc.
+- detectors: yolo, SSD, RetinaNet, \[None / Fast / Faster / Mask\]-RCNN head etc.
+- I've used other things as well, but I can't really remember them right now.
+
+I'm familiar with but have not yet applied professionally:
+- recurrent neural nets (+ LSTM)
+- recursive neural nets
+- GANs
+- reinforcement learning
 
 # 4. Misc.
 
