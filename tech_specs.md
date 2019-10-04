@@ -175,7 +175,7 @@ I'm experienced with:
 - detectors: yolo, SSD, RetinaNet, \[None / Fast / Faster / Mask\]-RCNN head etc.
 - I've used other things as well, but I can't really remember them right now.
 
-I'm familiar with but have not yet applied professionally:
+I'm familiar with, have not yet used professionally, and would welcome the opportunity to apply:
 - recurrent neural nets (+ LSTM)
 - recursive neural nets
 - GANs
