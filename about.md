@@ -33,7 +33,7 @@ Ok, there was a 1-year long break (2009-2010), during which I only wrote the cod
 Back in 2008 I was writing Java code, but, in the mean time, I've switched to C++ and, later, Python.
 
 ### 4.1.1 C++:
-Between July 2010 and August 2016, C++ was the language in which I spent most of the time writing code. Since then, I only use it occasionally, so one could say that my skills are a bit rusty. However, to my surprise, at the time of this writing (October 2019), when having to write a samll C++ project for one of my clients, I discovered that I still remember enough of the tricks I used to know so as to produce a decent quality code.
+Between July 2010 and August 2016, C++ was the language in which I spent most of the time writing code. Since then, I only use it occasionally, so one could say that my skills are a bit rusty. However, to my surprise, at the time of this writing (October 2019), when having to write a short C++ project for one of my clients, I discovered that I still remember enough of the tricks I used to know so as to produce a decent quality code.
 
 In 2016, when I, becoming self-employed, I had the choice of the language to use, I've switched to Python. But I still enjoy writing a bit of C++ code from time to time if necessary.
 
