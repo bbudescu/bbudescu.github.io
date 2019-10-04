@@ -11,7 +11,10 @@ I am a machine learning and computer vision engineer. I help companies big and s
 TBD
 
 # 3. The Story So Far
-Banal consecution of events: student -> intern -> employee -> freelancer -> manager
+Banal consecution of events:
+
+student -> intern -> employee -> freelancer -> manager
+
 Check out my [LinkedIn profile](https://www.linkedin.com/in/bbudescu/) for specifics.
 
 # 4. Tech Specs
