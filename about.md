@@ -102,7 +102,7 @@ where possible `numpy` (w/ `PIL`/`pillow` for I/O), `OpenCV`, occasionally: `sci
 - also played a bit with: `holoviews`, `bokeh`
 
 ##### 4.1.2.1.6. Statistics
-the `statistics` builtin, `scipy.stats`, `statsmodels`, `pandas`
+the `statistics` builtin module, `scipy.stats`, `statsmodels`, `pandas`, [`numpy`'s statistics err... section](https://docs.scipy.org/doc/numpy/reference/routines.statistics.html)
 
 #### 4.1.2.2. Tools
 - virtual environments: `virtualenv`, `venv`, `pipenv`
