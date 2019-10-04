@@ -107,6 +107,9 @@ where possible `numpy` (w/ `PIL`/`pillow` for I/O), `OpenCV`, occasionally: `sci
 ##### 4.1.2.1.6. Statistics
 the `statistics` builtin module, `scipy.stats`, `statsmodels`, `pandas`, [`numpy`'s statistics err... section](https://docs.scipy.org/doc/numpy/reference/routines.statistics.html)
 
+##### 4.1.2.1.7. Optimization
+`scipy.optimize`, `openopt`, `cvxpy` and, somewhat related, `autograd`
+
 #### 4.1.2.2. Tools
 - virtual environments: `virtualenv`, `venv`, `pipenv`
 - `ipython` console
@@ -126,6 +129,14 @@ I haven't written a kernel since 2011, but I've used libraries like cudnn, cuBLA
 - Languages I can understand (and write) that can be understood by computers, but are not programming languages: Markdown, HTML (basic), LaTeX
 
 ## 4.2. Computer Vision
+
+### 4.2.1. OpenCV
+I've been using OpenCV in almost every project I've worked on ever since I've started doing image processing (2011), in both C++ and Python. In some projects it played a central role (e.g., for the visual odometry projects), while in others it played more of a marginal one (e.g., when training neural nets, I used it mostly for implementing preprocessing operations, e.g. read images, normalization, cropping, augmentation etc.). I'm familiar with (some / most of) the functionality offered by the opencv's core, highgui, imgproc, video, calib3d modules. Below are the purposes I can remember using it for:
+- reading/writing images from/to disk/network/video files
+- drawing on images, rotating/resizing/etc. and displaying them on screen
+- colorspace conversions, histograms, image filtering (e.g., image denoising, contour detection using morphological, gaussian, laplacian, sobel, gabor etc. filters), distance transforms, thresholding, connected components, segmentation, feature detection (e.g., detect contours using Canny, detect lines using the Hough transform) etc.
+- optical flow, background subtraction
+- camera calibration, perspective transformations (e.g., image rectification), 3D reconstruction, retrieving camera position and orientation in space using the acquired image
 
 ## 4.3. Deep Learning
 
