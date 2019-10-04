@@ -30,7 +30,7 @@ The first time I got paid for the code I wrote was in July 2008 and that's how I
 
 Ok, there was a 1-year long break (2009-2010), during which I only wrote the code for a website, but I was still a student back then and had a job as a computer hardware sales/repair-rep, so don't blame me for it.
 
-Back in 2008 I was writing Java code, but, in the mean time, I've switched to C++ and, later, Python .
+Back in 2008 I was writing Java code, but, in the mean time, I've switched to C++ and, later, Python.
 
 ### 4.1.1 C++:
 Between July 2010 and August 2016, C++ was the language in which I spent most of the time writing code. Since then, I only use it occasionally, so one could say that my skills are a bit rusty. However, to my surprise, at the time of this writing (October 2019), when having to write a samll C++ project for one of my clients, I discovered that I still remember enough of the tricks I used to know so as to produce a decent quality code.
