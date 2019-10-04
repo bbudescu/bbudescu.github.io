@@ -32,6 +32,8 @@ social:
 urls:
     - text: About Me
       url: /about/
+    - text: Tech Specs
+      url: /tech_specs/
 #     - text: My Projects
 #       url: /projects/
     - text: XML Feed
