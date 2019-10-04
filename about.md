@@ -44,7 +44,7 @@ During the various projects I've taken part to I've had the chance to write both
 #### Tech
 Libraries, language extensions, frameworks, tool chains etc. related to C++
 
-##### 4.1.1.1. `stl`
+#### 4.1.1.1. `stl`
 (including stuff defined by the C++ 11 / 14 standars (I didn't get to C++ 17, though)
 - containers: `array`, `map`, `set`, `unordered_map`, `unordered_set`, `vector`, and the lesser known (and widely underapreciated, despite haveing a very efficient `IPP`-based implementation when used compiled with Intel's compiler) `valarray`; I'm also a fan of the Oxford comma
 - algorithms: functions the like of which you would find in `<algorithm>` and `<numeric>`. Very interestingly, the `thrust` template library bundled within the CUDA toolkit exposes a very similar API, but is also able to generate CUDA kernels and / or multi-threaded implementations for the operations (under the hood, they would use stuff like `OpenMP` or Intel's Threading Building Blocks (`TBB`) to parallelize the code across available hardware).
@@ -53,12 +53,12 @@ Libraries, language extensions, frameworks, tool chains etc. related to C++
 - multi-threading: `<thread>` API and associated stuff like atomics, locks, semaphores, condition variables, futures etc. I've also written some multi-threaded code using the Windows API, `pthread` and, at some point, I needed a fair lock, which I couldn't find an implementation of in the `stl` at the time and used the one in `boost` (or `tbb`?) instead
 - other stuff, like `<chrono>` and `<random>`
 
-##### 4.1.1.2. Boost libraries
+#### 4.1.1.2. Boost libraries
 - most of the functionality I used to use (like, e.g., tuples) has now been (or is in the process of being) standardized in C++11/14/17/..., so you get it in most `stl` implementations bundled with compilers
 - `Random`: the mersenne-twister implementation in boost was way better then the one in the stl packaged with the C++ compiler delivered with Visual Studio 2015. This actually made a whole bunch of difference when training some neural nets.
 - `Bimap`, `Filesystem`, `Python`, and `Test`
 
-##### 4.1.1.3. Others
+#### 4.1.1.3. Others
 - OpenCV (more on this in the Computer Vision section below)
 - OpenMP (it's a language extension, not a library, I know...)
 - Caffe (everybody used to add their custom layers to caffe at some point)
@@ -69,7 +69,7 @@ Libraries, language extensions, frameworks, tool chains etc. related to C++
 - TensorFlow's C API (not the C++ one, because that's not really portable)
 - ...
 
-##### 4.1.1.4. C++-related
+#### 4.1.1.4. C++-related
 - a few design patterns (actually, mostly idioms) I remember emerging in my code: pimpl, visitor (via double dispatch), RAII (scope guards), observer, SFINAE, decorator, factory, CAS (copy-and-swap), COW (copy-on-write), nifty counter (aka Schwarz counter), type traits, CRTP, move semantics and rvalue references.
 - please bear in mind that I don't remember all the crazy template stuff I used to do, and that I might have to freshen up my knowledge on some of the design patterns I mentioned at the previous point before being able to use them proficiently again.
 - for most of my projects, I've usually had to spend a bit of time and effort for ensuring compatibility across various OSs (Windows and Linux), platforms (x86/amd64, ARM), compilers (Microsoft, Intel, GNU, LLVM), IDEs (Microsoft's Visual Studio, JetBrains' CLion, UNIX makefiles - although I'm not very proficient with those, and, a long time ago, Eclipse CDT) and ABIs. To that end, I've done stuff like, e.g., defining COM-compatible APIs for Microsoft Windows dlls, and using `cmake` for builds, static code analysis tools (various linters and checks for standards / coding guidelines) - and, for that matter, dynamic analysis tools for catching heisenbugs and fixing memory leaks (e.g., IBM Rational Purify, Valgrind Memcheck, Microsoft BoundsChecker). Check out [this](https://github.com/bbudescu/hamming) project I wrote for an old interview, for an example.
