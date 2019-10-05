@@ -168,7 +168,7 @@ I used a morphological active contours algorithm to retrieve the contours of the
 
 #### 2.3.4. 3D Reconstruction (kind of...)
 - not sure how to call it, because the term _"3D Reconstruction"_ is generally used to refer to algorithms like SLAM and SfM, and we haven't used those. We actually obtained similar results as you would get from these algorithms, but for a constrained version of the problem.
-- Specifically, 3D Reconstruction algorithms like SLAM and SfM aim at creating a 3D map of the environment in which the camera is moving, while _concomitantly_ estimating the camera's trajectory within the estimated 3D map reconstruction.
+- Specifically, 3D Reconstruction algorithms like SLAM and SfM aim at creating a 3D map of the environment in which the camera is moving, while _concomitantly_ estimating the camera's trajectory within the (estimated) 3D map reconstruction.
 - Our task was a constrained, and hence, easier version of the generic 3D reconstruction task. Namely, we only had to reconstruct  _parts_ of the environment, so as to detect the positions and orientations of specific objects. The rest of the environment was guaranteed to remain unchanged, so we could build a 3D map _a priori_.
 - As such, instead of having to _concomitantly_ perform 3D reconstruction and the camera's trajectory estimation within the map, in our case, the two tasks could be solved independently. Conversely, in SLAM / SfM, at each iteration the map is estimated using the current _estimation_ of the camera's trajectory, and, reciprocally, the camera's trajectory is estimated using the current _estimation_ of the map.
 - So, we had to:
@@ -178,8 +178,8 @@ I used a morphological active contours algorithm to retrieve the contours of the
 - In contrast, SLAM and SfM tackle the much harder problem of recognizing arbitrary unknown objects (or parts / regions thereof) across frames that they can base their estimations on.
 - One of the challenges we faced during implementation was estimating the camera's position when no landmark was visible. We tackled this problem by:
     - extrapolating current camera pose from previous pose estimations. Actually, in the offline mode, we were able to also use interpolation on both previous and later samples to achieve higher accuracy
-    - using multiple cameras and performing synchronized fusion of each of their hypotheses about the pose
-    
+    - using multiple cameras and performing fusion of each of their hypotheses about the pose. In the online setting, camera pose estimations were also fused with pose hypotheses based on other sensors (accelerometers, gyroscope, compass, lidar, optical flow-based motion estimators and GPS, where avalable, although, in that particular use case it was mostly unavailable), as well as the commands issued to the actuators and motors that controlled the vehicle carrying the cameras.
+- Other challenges included dealing with errors of detection and orientation / reconstruction. We experimented with several optimization algorithms for improving the accuracy of the reconstruction and with methods for improving robustness based on as many measurements as possible, which led to tasks such as outlier detection.
 
 # 3. Deep Learning
 
@@ -210,7 +210,7 @@ I'm experienced with:
 - image preprocessing: standardization, contrast normalization, ZCA whitening etc.
 - image augmentation
 - architectures: resnet, fpn, unet, mobilenet etc.
-- detectors: yolo, SSD, RetinaNet, \[None / Fast / Faster / Mask\]-RCNN head etc.
+- detectors: yolo, SSD, RetinaNet, \[None / Fast / Faster / Mask\]-RCNN heads etc.
 - I've used other things as well, but I can't really remember them right now.
 
 I'm familiar with, have not yet used professionally, and would welcome the opportunity to apply:
@@ -227,12 +227,25 @@ I'm familiar with, have not yet used professionally, and would not mind applying
 - Bayesian Networks
 - everything Markov: chains, networks, \[hidden\] models
 
+Example of tasks I've tackled over time using deep learning approaches:
+- fully connected neural nets for regression of:
+    - medical measurements useful for diagnosis of coronary disease
+    - toy datasets, e.g. housing prices
+- convolutional nets on images for:
+    - semantic segmentation of objects (tissues and organs in medical images, skin in natural images)
+    - object bounding box detection (e.g., faces, humans)
+    - object keypoint detection (facial landmarks, human pose)
+    - object classification
+    - toy dataset: regression of the angle of rotation between two versions of the same image
+    
+
 # 4. Misc.
 
 ## 4.1. Docker
+Since 2018, all training or inference code I've delivered to my clients is neatly packaged in docker containers, so it can easily be deployed on arbitrary hardware, whether it's our hardware, the client's, or a rented VM in an arbitrary cloud (we've worked with instances on Amazon AWS, Microsoft Azure and Google Compute Platform).
 
 ## 4.2. Git
 I'm not a `git` guru, but I can find my way around enough to respect a given flow. I've contributed to some open source projects in the past (timidly), and I've had the chance to learn how to follow a strictly enforced policy on committing/testing/integrating the code with larger teams.
 
 ## 4.3. Others
-- OpenAPI
+- OpenAPI: we've delivered web services that exposed APIs defined using the OpenAPI standard
