@@ -164,7 +164,7 @@ I used a morphological active contours algorithm to retrieve the contours of the
 
 - the task was to reconstruct the camera's trajectory within its environment, given a minimal amount of information that would constrain the possible positions
 - in this case, the constraint was the prior knowledge of the fixed height at which the camera was situated with respect to the plane of the ground
-- to solve the task we used camera calibration, perspective transform, and optical flow algorithms (and, of course, filtering for noise reduction and other \[pre-|post\]-processing)
+- to solve the task we used camera calibration, perspective transform, and optical flow algorithms (and, of course, filtering for noise reduction and other \[pre-\|post\]-processing)
 
 #### 2.3.4. 3D Reconstruction (kind of...)
 - not sure how to call it, because the term _"3D Reconstruction"_ is generally used to refer to algorithms like SLAM and SfM, and we haven't used those. We actually obtained similar results as you would get from these algorithms, but for a constrained version of the problem.
@@ -205,7 +205,7 @@ I'm experienced with:
     - recognition: triplet loss, additive angular margin (ArcFace)
     - image enhancement: various perceptual image difference metrics
 - regularization: l2 norm (weigh decay), sparsity, \[Spatial\] dropout (binary bernoulli noise) and gaussian noise
-- optimization algorithms: \[Mini-batch | Stochastic\] Gradient Descent, RMSprop, Adagrad, Adadelta \[N\]Adam, Contrastive Divergence
+- optimization algorithms: \[Mini-batch \| Stochastic\] Gradient Descent, RMSprop, Adagrad, Adadelta \[N\]Adam, Contrastive Divergence
 - optimizer variants: momentum, nesterov accelerated gradients
 - image preprocessing: standardization, contrast normalization, ZCA whitening etc.
 - image augmentation
