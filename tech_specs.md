@@ -134,12 +134,7 @@ While being a PhD student, I've been able to learn the fundamentals of classical
 
 All this theory has proven extremely useful over the years. I've been able to apply it time and again in many circumstances. Even if the solution that worked best in the end was based on deep learning, the knowledge about the classical computer vision methods helped me design acquisition systems, perform data normalization and other kinds of preprocessing, establish performance baselines etc.
 
-Some of the tasks that I solved using only classical computer vision algorithms over time:
-- blood vessel segmentation using morphological active contours
-- visual odometry systems: route66, drona
-- document detector
-
-## 2.2 OpenCV
+## 2.2. OpenCV
 
 I've been using OpenCV in almost every project I've worked on ever since I've started doing image processing (2011), in both C++ and Python. In some projects it played a central role (e.g., for the visual odometry projects), while in others it played more of a marginal one (e.g., when training neural nets, I used it mostly for implementing preprocessing operations, e.g. read images, normalization, cropping, augmentation etc.). I'm familiar with (some / most of) the functionality offered by the opencv's `core`, `highgui`, `imgproc`, `video`, `calib3d` modules. Below are the purposes I can remember using it for:
 - reading/writing images from/to disk/network/video files
@@ -147,6 +142,44 @@ I've been using OpenCV in almost every project I've worked on ever since I've st
 - colorspace conversions, histograms, image filtering (e.g., image denoising, contour detection using morphological, gaussian, laplacian, sobel, gabor etc. filters), distance transforms, thresholding, connected components, segmentation, feature detection (e.g., detect contours using Canny, detect lines using the Hough transform) etc.
 - optical flow, background subtraction
 - camera calibration, perspective transformations (e.g., image rectification), 3D reconstruction, retrieving camera position and orientation in space using the acquired image
+
+## 2.3. Classical CV projects
+
+Some of the tasks that I solved using only classical computer vision algorithms over time:
+
+### 2.3.1. Blood Vessel Segmentation
+
+I used a morphological active contours algorithm to retrieve the contours of the blood vessels from angiorgraphy imagery. Of course, other filtering was involved e.g., reduce noise, get gradient images, distance transforms, differential geomtery methods for edge detection etc.
+
+### 2.3.2. Document Detection
+
+- camera calibration
+- perspective transform for image rectification (reproject the acquired image such that its the document's appearance looks as if the camera's image projection plane was parallel with the document's plane)
+- noise filtering using Gaussian and morphological kernels
+- edge detection using Canny
+- line detection using the Hough transform
+- home-baked clustering algorithm to identify line groups that may be potential candidates for document edges, taking into account standard paper aspect ratios and sizes
+
+### 2.3.3. Visual Odometry
+
+- the task was to reconstruct the camera's trajectory within its environment, given a minimal amount of information that would constrain the possible positions
+- in this case, the constraint was the prior knowledge of the fixed height at which the camera was situated with respect to the plane of the ground
+- to solve the task we used camera calibration, perspective transform, and optical flow algorithms (and, of course, filtering for noise reduction and other \[pre-|post\]-processing)
+
+#### 2.3.4. 3D Reconstruction (kind of...)
+- not sure how to call it, because the term _"3D Reconstruction"_ is generally used to refer to algorithms like SLAM and SfM, and we haven't used those. We actually obtained similar results as you would get from these algorithms, but for a constrained version of the problem.
+- Specifically, 3D Reconstruction algorithms like SLAM and SfM aim at creating a 3D map of the environment in which the camera is moving, while _concomitantly_ estimating the camera's trajectory within the estimated 3D map reconstruction.
+- Our task was a constrained, and hence, easier version of the generic 3D reconstruction task. Namely, we only had to reconstruct  _parts_ of the environment, so as to detect the positions and orientations of specific objects. The rest of the environment was guaranteed to remain unchanged, so we could build a 3D map _a priori_.
+- As such, instead of having to _concomitantly_ perform 3D reconstruction and the camera's trajectory estimation within the map, in our case, the two tasks could be solved independently. Conversely, in SLAM / SfM, at each iteration the map is estimated using the current _estimation_ of the camera's trajectory, and, reciprocally, the camera's trajectory is estimated using the current _estimation_ of the map.
+- So, we had to:
+    - estimate the camera's position and orientation within the environment. We did this by inferring the camera's relative pose (i.e., position and orientation) to objects detected within the acquired images, the positions of which within the environment were known _a priori_.
+    - if visible within the acquired images, detect objects of interest and estimate their position and orientation within the environment. If the camera's pose in the environemnt was known from the previous step, the problem reduced to finding the pose of the objects of interest relative to the camera
+- Both of the above tasks were further simplified by the fact that the objects we used for orientation were AR markers, which are easy (i.e., efficient, accurate and unambigous) to detect, recognize and reconstruct due to their unique and high-contrast appearance, and due the prior knowledge of their structure that allows for easy identification of their parts.
+- In contrast, SLAM and SfM tackle the much harder problem of recognizing arbitrary unknown objects (or parts / regions thereof) across frames that they can base their estimations on.
+- One of the challenges we faced during implementation was estimating the camera's position when no landmark was visible. We tackled this problem by:
+    - extrapolating current camera pose from previous pose estimations. Actually, in the offline mode, we were able to also use interpolation on both previous and later samples to achieve higher accuracy
+    - using multiple cameras and performing synchronized fusion of each of their hypotheses about the pose
+    
 
 # 3. Deep Learning
 
