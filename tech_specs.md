@@ -134,6 +134,11 @@ While being a PhD student, I've been able to learn the fundamentals of classical
 
 All this theory has proven extremely useful over the years. I've been able to apply it time and again in many circumstances. Even if the solution that worked best in the end was based on deep learning, the knowledge about the classical computer vision methods helped me design acquisition systems, perform data normalization and other kinds of preprocessing, establish performance baselines etc.
 
+Some of the tasks that I solved using only classical computer vision algorithms over time:
+- blood vessel segmentation using morphological active contours
+- visual odometry systems: route66, drona
+- document detector
+
 ## 2.2 OpenCV
 
 I've been using OpenCV in almost every project I've worked on ever since I've started doing image processing (2011), in both C++ and Python. In some projects it played a central role (e.g., for the visual odometry projects), while in others it played more of a marginal one (e.g., when training neural nets, I used it mostly for implementing preprocessing operations, e.g. read images, normalization, cropping, augmentation etc.). I'm familiar with (some / most of) the functionality offered by the opencv's `core`, `highgui`, `imgproc`, `video`, `calib3d` modules. Below are the purposes I can remember using it for:
