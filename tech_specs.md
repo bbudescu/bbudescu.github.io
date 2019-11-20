@@ -78,7 +78,7 @@ Way too many to build an exhaustive list, but I'll try and cover what I think mi
 - `qt`(`PyQt4` / `PyQt5` / `PySide`) for GUIs and, occasionally, real OS threads (working around python's GIL)
 
 #### 1.2.1.3. Deep Learning
-`tensorflow` (including the [TensorFlow Object Detection API](https://github.com/tensorflow/models/tree/master/research/object_detection) and `tensorboard`), `keras`, `scikit-learn`, `theano`, `pylearn2` (yes, I'm _that_ old), `hyperopt` (and `hyperas`), `spearmint`
+`tensorflow` (including the [TensorFlow Object Detection API](https://github.com/tensorflow/models/tree/master/research/object_detection) and `tensorboard`), `keras`, `scikit-learn`, `caffe`, `theano`, `pylearn2` (yes, I'm _that_ old), `hyperopt` (and `hyperas`), `spearmint`
 
 #### 1.2.1.4. Image Processing / Computer Vision
 where possible `numpy` (w/ `PIL`/`pillow` for I/O), `OpenCV`, occasionally: `scipy.ndimage`, `mahotas` and `scikit-image` 
